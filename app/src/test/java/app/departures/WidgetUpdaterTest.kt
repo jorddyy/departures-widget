@@ -260,8 +260,8 @@ class WidgetUpdaterTest {
         val board = Board(
             null,
             listOf(
-                Departure("68", "Townsville, Hill", now + 3 * min, now + 4 * min, 1, true),
-                Departure("18", "Townsville, Harbour", now + 9 * min, now + 9 * min, 0, true),
+                Departure("68", "Townsville, Hill", now + 3 * min, now + 4 * min, 1, true, platform = "S"),
+                Departure("18", "Townsville, Harbour", now + 15 * min, now + 15 * min, 0, true, platform = "B"),
             ),
             now,
             "8500001",
@@ -275,7 +275,10 @@ class WidgetUpdaterTest {
         // Rows have the same width, so positions within a row are comparable.
         fun left(id: Int) = v.findViewById<View>(id).left
         assertEquals("+1", v.text(R.id.r1_delay))
-        assertEquals(left(R.id.r1_time), left(R.id.r2_time))
+        assertEquals("15 min", v.text(R.id.r2_min))
+        // Platform, time and countdown columns start at the same x in both rows.
+        assertEquals(left(R.id.r1_platform), left(R.id.r2_platform))
+        assertEquals((v.findViewById<View>(R.id.r1_time).parent as View).left, (v.findViewById<View>(R.id.r2_time).parent as View).left)
         assertEquals(left(R.id.r1_min), left(R.id.r2_min))
     }
 
