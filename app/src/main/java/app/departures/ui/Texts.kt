@@ -42,8 +42,26 @@ object Texts {
         }
     }
 
-    /** Spoken description of a departure for screen readers. */
-    fun describe(context: Context, d: Departure, now: Long): String {
+    /**
+     * What to show when there are no departures to list, or null when there are. [hasBoard] is
+     * false until the first successful fetch.
+     */
+    fun empty(context: Context, hasUpcoming: Boolean, hasBoard: Boolean, offline: Boolean): String? = when {
+        hasUpcoming -> null
+        !hasBoard && offline -> context.getString(R.string.no_connection)
+        !hasBoard -> context.getString(R.string.loading)
+        else -> context.getString(R.string.no_departures)
+    }
+
+    /** "Hill" or "Lausanne, Gare", plus " · Pl. 3" when the platform is known. */
+    fun destinationWithPlatform(context: Context, d: Departure, stopName: String?): String {
+        val destination = Format.destination(d.destination, stopName)
+        val platform = d.platform?.trim().orEmpty()
+        return if (platform.isEmpty()) destination else context.getString(R.string.destination_platform, destination, platform)
+    }
+
+    /** Spoken description of a departure for screen readers: line, destination, time, delay. */
+    fun describe(context: Context, d: Departure, now: Long, stopName: String? = null): String {
         val delay = d.delayMinutes
         val delayText = when {
             !d.realtime || delay == null -> context.getString(R.string.a11y_scheduled)
@@ -53,6 +71,8 @@ object Texts {
         }
         return context.getString(
             R.string.a11y_departure,
+            d.line,
+            Format.destination(d.destination, stopName),
             Format.clock(d.scheduledEpochMs),
             delayText,
             Format.countdown(now, d),

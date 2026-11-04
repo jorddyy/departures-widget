@@ -12,10 +12,12 @@ import android.widget.RemoteViews
 import app.departures.R
 import app.departures.core.Board
 import app.departures.core.Format
+import app.departures.core.LineColors
 import app.departures.core.RefreshPolicy
 import app.departures.core.Stop
 import app.departures.data.Stations
 import app.departures.ui.StopPickerActivity
+import app.departures.ui.Texts
 
 /** Draws the station-board widgets: the next departures at one stop, every line and direction. */
 object StationWidgetUpdater {
@@ -43,7 +45,8 @@ object StationWidgetUpdater {
     }
 
     /** Renders every station widget; returns when they next need redrawing, or null if there are none. */
-    fun render(context: Context, refreshing: Boolean, now: Long, minutes: Boolean): Long? {
+    /** @param refreshingStopId the stop whose board you just tapped, shown as "updating…". */
+    fun render(context: Context, refreshingStopId: String?, now: Long, minutes: Boolean): Long? {
         val ids = ids(context)
         if (ids.isEmpty()) return null
         val manager = AppWidgetManager.getInstance(context)
@@ -53,6 +56,7 @@ object StationWidgetUpdater {
             val stop = stations.stop(id)
             val board = stop?.let { stations.board(it) }
             val offline = stop != null && stations.isOffline(stop)
+            val refreshing = stop != null && stop.id == refreshingStopId
             val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 RemoteViews(
                     SIZES.associate { (rows, height) ->
@@ -114,26 +118,21 @@ object StationWidgetUpdater {
             when {
                 refreshing -> context.getString(R.string.updating_short)
                 offline -> context.getString(R.string.offline_short)
-                fetched != null -> Format.clock(fetched)
+                fetched != null -> context.getString(R.string.updated_at, Format.clock(fetched))
                 else -> ""
             },
         )
         val upcoming = board?.upcoming(now).orEmpty()
         ROWS.forEachIndexed { i, ids ->
             val d = upcoming.getOrNull(i)?.takeIf { i < rows }
-            WidgetUpdater.bindRow(context, views, d, now, ids[0], ids[3], ids[4], ids[5], ids[6], minutes)
+            WidgetUpdater.bindRow(context, views, d, now, ids[0], ids[3], ids[4], ids[5], ids[6], minutes, stop.name)
             if (d != null) {
                 views.setTextViewText(ids[1], d.line)
-                WidgetUpdater.tintBadge(views, ids[7], ids[1], d)
-                views.setTextViewText(ids[2], d.destination.substringAfter(", ", d.destination))
+                WidgetUpdater.tintBadge(context, views, ids[7], ids[1], LineColors.of(d.operator, d.line))
+                views.setTextViewText(ids[2], Texts.destinationWithPlatform(context, d, stop.name))
             }
         }
-        val empty = when {
-            upcoming.isNotEmpty() -> null
-            board == null && offline -> context.getString(R.string.no_connection)
-            board == null -> context.getString(R.string.loading)
-            else -> context.getString(R.string.no_departures)
-        }
+        val empty = Texts.empty(context, upcoming.isNotEmpty(), board != null, offline)
         views.setViewVisibility(R.id.empty, if (empty == null) View.GONE else View.VISIBLE)
         views.setTextViewText(R.id.empty, empty)
         return views

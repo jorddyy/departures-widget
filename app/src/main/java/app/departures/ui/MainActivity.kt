@@ -69,6 +69,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import app.departures.core.Departure
 import app.departures.core.Direction
@@ -145,11 +147,15 @@ private fun DetailScreen(commute: Commute, location: LocationSource, updater: Up
         refresh(userInitiated = now - fetched > 60_000)
     }
 
-    // Keep "in N min" current while the screen is visible. Purely local, no network.
-    LaunchedEffect(Unit) {
-        while (true) {
-            delay(15_000)
-            now = System.currentTimeMillis()
+    // Keep "in N min" current while the screen is visible (paused in the background).
+    // Purely local, no network.
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            while (true) {
+                now = System.currentTimeMillis()
+                delay(15_000)
+            }
         }
     }
 
@@ -253,16 +259,16 @@ private fun DetailScreen(commute: Commute, location: LocationSource, updater: Up
             val upcoming = snapshot.board?.upcoming(now).orEmpty()
             if (upcoming.isEmpty()) {
                 item {
-                    val message = when {
-                        refreshing || snapshot.board == null && !snapshot.offline -> stringResource(R.string.loading)
-                        snapshot.board == null -> stringResource(R.string.no_connection)
-                        else -> stringResource(R.string.no_departures)
+                    val message = if (refreshing && snapshot.board == null) {
+                        stringResource(R.string.loading)
+                    } else {
+                        Texts.empty(context, hasUpcoming = false, hasBoard = snapshot.board != null, offline = snapshot.offline).orEmpty()
                     }
                     Text(message, Modifier.padding(vertical = 24.dp), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
             }
             items(upcoming, key = { it.scheduledEpochMs.toString() + it.destination }) { d ->
-                DepartureRow(context, d, now)
+                DepartureRow(context, d, now, route.from(snapshot.resolution.direction).name)
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
             }
             }
@@ -348,8 +354,8 @@ private fun LineBadge(d: Departure) {
 }
 
 @Composable
-private fun DepartureRow(context: Context, d: Departure, now: Long) {
-    val description = Texts.describe(context, d, now)
+private fun DepartureRow(context: Context, d: Departure, now: Long, stopName: String) {
+    val description = Texts.describe(context, d, now, stopName)
     Row(
         Modifier
             .fillMaxWidth()
@@ -368,7 +374,11 @@ private fun DepartureRow(context: Context, d: Departure, now: Long) {
                 }
             }
             val detail = buildString {
-                append(d.destination.substringAfter(", ", d.destination))
+                append(Format.destination(d.destination, stopName))
+                d.platform?.trim()?.takeIf { it.isNotEmpty() }?.let {
+                    append(" · ")
+                    append(context.getString(R.string.platform, it))
+                }
                 append(" · ")
                 append(
                     when {

@@ -31,6 +31,46 @@ class TimetableClientTest {
     }
 
     @Test
+    fun `fetches further pages until enough direct departures are found`() {
+        // Page 1: one direct departure, last row at 08:20. Page 2: two more.
+        fun row(t: String, to: String) =
+            """{"number":"7","category":"T","to":"$to","stop":{"departure":"2026-11-03T$t:00+0100"}}"""
+        val page1 = """{"stationboard":[${row("08:10", "Townsville, Station")},${row("08:20", "Townsville, Harbour")}]}"""
+        val page2 = """{"stationboard":[${row("08:21", "Townsville, Station")},${row("08:40", "Townsville, Station")}]}"""
+        val requested = mutableListOf<String>()
+        val client = TimetableClient(baseUrl = "https://x", http = { url ->
+            requested += url
+            if (url.contains("datetime")) page2 else page1
+        })
+        val board = client.departures(ROUTE, Direction.TO_WORK, 0)
+        assertEquals(3, board.departures.size)
+        assertEquals(2, requested.size)
+        // The second page starts a minute after the last row of the first, in Swiss time.
+        assertTrue(requested[1].endsWith("&datetime=2026-11-03+08%3A21"))
+    }
+
+    @Test
+    fun `stops paging when the timetable runs out`() {
+        val empty = """{"stationboard":[]}"""
+        val requested = mutableListOf<String>()
+        val board = TimetableClient(http = { requested += it; empty }).departures(ROUTE, Direction.TO_WORK, 0)
+        assertTrue(board.departures.isEmpty())
+        assertEquals(1, requested.size)
+    }
+
+    @Test
+    fun `never fetches more than the page limit`() {
+        var calls = 0
+        var minute = 0
+        TimetableClient(http = {
+            calls++
+            minute += 10
+            """{"stationboard":[{"number":"9","to":"Elsewhere","stop":{"departure":"2026-11-03T08:${minute}:00+0100"}}]}"""
+        }).departures(ROUTE, Direction.TO_WORK, 0)
+        assertEquals(TimetableClient.MAX_PAGES, calls)
+    }
+
+    @Test
     fun `station board keeps everything and has no direction`() {
         val board = TimetableClient(http = { fixture("market.json") }).stationBoard(MARKET, 1L)
         assertEquals(null, board.direction)

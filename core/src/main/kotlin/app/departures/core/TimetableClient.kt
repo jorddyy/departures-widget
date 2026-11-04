@@ -16,12 +16,33 @@ class TimetableClient(
     private val baseUrl: String = "https://transport.opendata.ch/v1",
     private val http: (String) -> String = ::httpGet,
 ) {
-    /** Departures from the start of [direction] that reach its end directly. */
+    /**
+     * Departures from the start of [direction] that reach its end directly.
+     *
+     * One page covers every line and direction at the stop, which at a busy hub can be only a
+     * few minutes, and late at night may hold no direct departure at all. So while fewer than
+     * [MIN_MATCHES] direct departures turn up, the next page is fetched (at most [MAX_PAGES]).
+     * At night that reaches the first morning departure.
+     */
     @Throws(IOException::class)
     fun departures(route: Route, direction: Direction, nowEpochMs: Long): Board {
         val from = route.from(direction)
-        val body = http(stationboardUrl(from))
-        return Board(direction, StationboardParser.parse(body, route.to(direction)), nowEpochMs, from.id)
+        val to = route.to(direction)
+        val found = LinkedHashMap<String, Departure>()
+        var url = stationboardUrl(from)
+        var previousLast = Long.MIN_VALUE
+        for (page in 1..MAX_PAGES) {
+            val body = http(url)
+            for (d in StationboardParser.parse(body, to)) {
+                found.putIfAbsent("${d.scheduledEpochMs}|${d.line}|${d.destination}", d)
+            }
+            if (found.size >= MIN_MATCHES) break
+            val last = StationboardParser.lastDepartureMs(body) ?: break
+            if (last <= previousLast) break // no progress: the timetable has run out
+            previousLast = last
+            url = stationboardUrl(from) + "&datetime=" + encode(Format.apiDateTime(last + 60_000))
+        }
+        return Board(direction, found.values.sortedBy { it.expectedEpochMs }, nowEpochMs, from.id)
     }
 
     /** All upcoming departures at [stop], for the station board widget. */
@@ -46,6 +67,12 @@ class TimetableClient(
          * all lines, so it must be generous to keep a few that go your way.
          */
         const val LIMIT = 40
+
+        /** Keep paging until this many direct departures are found... */
+        const val MIN_MATCHES = 3
+
+        /** ...but fetch at most this many pages per refresh. */
+        const val MAX_PAGES = 3
 
         /** The station board shows every departure, so fewer rows cover enough time. */
         const val BOARD_LIMIT = 15

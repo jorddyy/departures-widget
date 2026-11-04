@@ -14,6 +14,9 @@ object LineColors {
             .orEmpty()
     }
 
+    /** Every bundled entry, for tests. */
+    internal val all: Map<String, LineColor> get() = table
+
     /** Colour for [line] run by [operator] (as the timetable API reports it), if known. */
     fun of(operator: String?, line: String): LineColor? {
         val op = operatorKey(operator) ?: return null

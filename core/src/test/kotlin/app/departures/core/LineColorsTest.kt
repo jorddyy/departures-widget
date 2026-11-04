@@ -41,4 +41,18 @@ class LineColorsTest {
         )
         assertEquals(mapOf("ABC|7" to LineColor(0xFF112233.toInt(), 0xFFFFFFFF.toInt())), table)
     }
+
+    @Test
+    fun `every bundled badge is readable`() {
+        fun lum(c: Int): Double {
+            fun ch(v: Int): Double = (v / 255.0).let { if (it <= 0.03928) it / 12.92 else Math.pow((it + 0.055) / 1.055, 2.4) }
+            return 0.2126 * ch(c shr 16 and 0xFF) + 0.7152 * ch(c shr 8 and 0xFF) + 0.0722 * ch(c and 0xFF)
+        }
+        val unreadable = LineColors.all.filter { (_, c) ->
+            val (hi, lo) = listOf(lum(c.background), lum(c.text)).sortedDescending()
+            (hi + 0.05) / (lo + 0.05) < 4.5
+        }
+        assertEquals(emptyMap<String, LineColor>(), unreadable)
+        assertEquals(true, LineColors.all.size > 200)
+    }
 }

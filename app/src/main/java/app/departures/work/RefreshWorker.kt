@@ -44,8 +44,11 @@ class RefreshWorker(context: Context, params: WorkerParameters) : CoroutineWorke
 
         /** Ask for a refresh soon. A user request replaces any pending automatic one. */
         fun enqueue(context: Context, userInitiated: Boolean, stopId: String? = null) {
+            // A refresh you asked for runs right away, even offline, so it fails fast and the
+            // widget says "offline" instead of waiting silently for a connection.
+            val constraints = if (userInitiated) Constraints() else Constraints(requiredNetworkType = NetworkType.CONNECTED)
             val request = OneTimeWorkRequestBuilder<RefreshWorker>()
-                .setConstraints(Constraints(requiredNetworkType = NetworkType.CONNECTED))
+                .setConstraints(constraints)
                 .setInputData(workDataOf(KEY_USER to userInitiated, KEY_STOP to stopId))
                 .build()
             val policy = if (userInitiated) ExistingWorkPolicy.REPLACE else ExistingWorkPolicy.KEEP

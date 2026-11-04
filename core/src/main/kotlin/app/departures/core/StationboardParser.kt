@@ -35,6 +35,15 @@ object StationboardParser {
             .toList()
     }
 
+    /**
+     * Scheduled time of the last row in the board, whatever its line or direction: where the
+     * next page should start. Null for an empty board.
+     */
+    fun lastDepartureMs(body: String): Long? =
+        json.decodeFromString(StationboardResponse.serializer(), body).stationboard
+            .mapNotNull { j -> j.stop?.let { it.departureTimestamp?.times(1000) ?: parseTime(it.departure) } }
+            .maxOrNull()
+
     /** Every departure in the board, soonest first (for the station board widget). */
     fun parseAll(body: String): List<Departure> =
         json.decodeFromString(StationboardResponse.serializer(), body).stationboard

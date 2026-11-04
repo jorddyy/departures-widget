@@ -23,7 +23,8 @@ you're probably going. Compact by default (4×1):
 
 **Station board:** the next departures at any stop you choose, on every line and in every
 direction. You pick the stop when adding the widget, and you can add as many as you like, one
-per stop. It shows 2 to 7 departures depending on its height. Tap it to refresh that stop;
+per stop. It shows 2 to 7 departures depending on its height, with the platform where the
+timetable has one ("Pl. 3"). Tap it to refresh that stop;
 to change the stop, long-press it → settings (✎).
 
 Your stops are stored only on your phone. Nothing about them is in this repository.
@@ -114,7 +115,11 @@ national timetable with real-time data. The app uses:
 - `/v1/stationboard?id=<stop>`, for the next departures at a stop
 
 For the commute widget it keeps only journeys whose pass list reaches your other stop, so
-short runs that end earlier are filtered out.
+short runs that end earlier are filtered out. One page of the station board covers every line
+at the stop, which at a busy hub can be only a few minutes, so while fewer than three direct
+departures turn up the app fetches the next page (at most three pages). Late at night this
+reaches the first morning departure, so the widget shows e.g. "05:42 · 6 h 10" rather than an
+empty list.
 
 ### Line colours
 
@@ -125,6 +130,9 @@ Basel (BVB, BLT). Other lines use the app's theme colour. The table
 - [OpenStreetMap](https://www.openstreetmap.org/copyright) route colours (TPG), © OpenStreetMap
   contributors, available under the Open Database Licence (ODbL)
 - [Traewelling/line-colors](https://github.com/Traewelling/line-colors) (VBZ, BVB, BLT), CC0
+
+Badge numbers are always black or white with at least 4.5:1 contrast; where a source's own
+text colour is harder to read, the generator replaces it.
 
 To refresh it, run the *Line colours* workflow and commit the CSV from its artifact. Adding a
 network means mapping its source to the operator code the timetable API reports (the workflow
