@@ -8,7 +8,7 @@ Sources:
 Also prints the `operator` names the timetable API uses at a few stations, so the app can
 match colours to departures. Run in CI (needs internet): python3 tools/line_colors.py
 """
-import csv, io, json, sys, urllib.parse, urllib.request
+import csv, io, json, sys, time, urllib.error, urllib.parse, urllib.request
 
 UA = {"User-Agent": "departures-widget line-colour probe"}
 
@@ -30,12 +30,31 @@ for q in ["Genève, Cornavin", "Genève, Bel-Air", "Zürich, Paradeplatz", "Bern
     seen = sorted({(j.get("operator"), j.get("category"), j.get("number")) for j in board}, key=str)
     print(st[0]["name"], "->", seen)
 
-print("\n== OpenStreetMap ==")
-query = """[out:json][timeout:200];
-area["ISO3166-1"="CH"][admin_level=2]->.ch;
-relation(area.ch)["type"="route"]["route"~"^(tram|bus|trolleybus|light_rail|subway|funicular)$"]["colour"];
+print("\n== OpenStreetMap (Geneva area) ==")
+# Canton of Geneva plus the cross-border ends of its lines. A query for all of Switzerland is
+# too heavy for the public Overpass servers; other networks come from the Traewelling list.
+query = """[out:json][timeout:120];
+relation(46.10,5.90,46.40,6.35)["type"="route"]["route"~"^(tram|bus|trolleybus|light_rail)$"]["colour"];
 out tags;"""
-osm = json.loads(get("https://overpass-api.de/api/interpreter", data=urllib.parse.urlencode({"data": query}).encode()))
+MIRRORS = [
+    "https://overpass-api.de/api/interpreter",
+    "https://overpass.kumi.systems/api/interpreter",
+    "https://overpass.private.coffee/api/interpreter",
+]
+osm = None
+for attempt in range(3):
+    for url in MIRRORS:
+        try:
+            osm = json.loads(get(url, data=urllib.parse.urlencode({"data": query}).encode()))
+            print("from", url)
+            break
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as e:
+            print("failed", url, e)
+    if osm:
+        break
+    time.sleep(20)
+if osm is None:
+    sys.exit("all Overpass servers failed")
 rows = []
 for el in osm["elements"]:
     t = el.get("tags", {})
