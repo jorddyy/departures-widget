@@ -156,9 +156,9 @@ class WidgetUpdaterTest {
         assertEquals(0xFFFFFFFF.toInt(), v.findViewById<TextView>(R.id.badge_text).currentTextColor)
         assertNotNull(v.findViewById<ImageView>(R.id.badge_bg).colorFilter)
 
-        // Unknown operator: default badge, no colour filter.
+        // Unknown operator: the app's default badge colours, set explicitly.
         val plain = render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, Board(Direction.TO_WORK, listOf(dep(2, 0)), now)), compact = true)
-        assertNull(plain.findViewById<ImageView>(R.id.badge_bg).colorFilter)
+        assertEquals(context.getColor(R.color.badge_text), plain.findViewById<TextView>(R.id.badge_text).currentTextColor)
     }
 
     // The launcher reuses the existing view when it redraws, so a render must undo whatever an
