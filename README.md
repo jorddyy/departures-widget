@@ -193,4 +193,5 @@ app/    Android: widgets (RemoteViews), WorkManager job, location, updater, Comp
 ```
 
 The tests use fictional stops ("Townsville"). CI (`.github/workflows/build.yml`) runs all three
-and builds the APKs on every push.
+in one Gradle invocation, once per pull request (a new push cancels the superseded run) and on
+every push to `main`, which also builds the signed release APK and publishes it.
