@@ -8,6 +8,10 @@ import java.time.format.DateTimeFormatter
 object Format {
     val ZONE: ZoneId = ZoneId.of("Europe/Zurich")
     private val clock = DateTimeFormatter.ofPattern("HH:mm").withZone(ZONE)
+    private val apiDateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").withZone(ZONE)
+
+    /** The timetable API's `datetime` parameter, in Swiss local time. */
+    fun apiDateTime(epochMs: Long): String = apiDateTime.format(Instant.ofEpochMilli(epochMs))
 
     fun clock(epochMs: Long): String = clock.format(Instant.ofEpochMilli(epochMs))
 
@@ -33,6 +37,17 @@ object Format {
             d < 0 -> "−${-d}"
             else -> null
         }
+    }
+
+    /**
+     * The destination to show at [stopName]: without the town when it's the same town as the
+     * stop ("Genève, Bel-Air" at "Genève, Cornavin" → "Bel-Air"), in full otherwise, so regional
+     * lines don't all read "Gare".
+     */
+    fun destination(destination: String, stopName: String?): String {
+        val town = destination.substringBefore(", ", "")
+        if (town.isEmpty() || stopName == null) return destination
+        return if (stopName.substringBefore(", ", "") == town) destination.substringAfter(", ") else destination
     }
 
     fun localHour(epochMs: Long): Int = Instant.ofEpochMilli(epochMs).atZone(ZONE).hour

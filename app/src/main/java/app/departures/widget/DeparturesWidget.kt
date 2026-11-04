@@ -56,7 +56,8 @@ class DeparturesWidget : AppWidgetProvider() {
                 // From a station board: refresh only its stop. From the commute widget: no id.
                 val widgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
                 val stopId = if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) null else Stations(context).stop(widgetId)?.id
-                WidgetUpdater.renderAll(context, refreshing = true)
+                val refreshing = if (stopId == null) WidgetUpdater.Refreshing.Commute else WidgetUpdater.Refreshing.Station(stopId)
+                WidgetUpdater.renderAll(context, refreshing)
                 RefreshWorker.enqueue(context, userInitiated = true, stopId = stopId)
             }
             ACTION_SWAP -> {

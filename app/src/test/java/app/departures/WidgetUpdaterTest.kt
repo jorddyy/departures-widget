@@ -161,6 +161,71 @@ class WidgetUpdaterTest {
         assertNull(plain.findViewById<ImageView>(R.id.badge_bg).colorFilter)
     }
 
+    // The launcher reuses the existing view when it redraws, so a render must undo whatever an
+    // earlier one changed. These tests redraw onto the same view, like the launcher does.
+
+    private fun reapply(view: View, s: Snapshot, compact: Boolean) {
+        WidgetUpdater.build(context, s, refreshing = false, now = now, compact = compact, minutes = true).reapply(context, view)
+    }
+
+    @Test
+    fun `buttons come back after setup on a reused view`() {
+        for (compact in listOf(true, false)) {
+            val v = render(Snapshot(null, Resolution(Direction.TO_WORK, Reason.TIME_OF_DAY), null, false, null), compact = compact)
+            assertEquals(View.GONE, v.visibility(R.id.swap))
+            reapply(v, snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, Board(Direction.TO_WORK, listOf(dep(3, 0)), now)), compact)
+            assertEquals(View.VISIBLE, v.visibility(R.id.swap))
+            if (!compact) assertEquals(View.VISIBLE, v.visibility(R.id.refresh))
+            assertEquals(View.VISIBLE, v.visibility(R.id.row1))
+            assertEquals(View.GONE, v.visibility(R.id.empty))
+        }
+    }
+
+    @Test
+    fun `badge colour does not stick when the next line has none`() {
+        val tram18 = Departure("18", "Townsville, Hill", now + 2 * min, now + 2 * min, 0, true, operator = "TPG")
+        val v = render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, Board(Direction.TO_WORK, listOf(tram18), now)), compact = true)
+        val official = v.findViewById<TextView>(R.id.badge_text).currentTextColor
+        reapply(v, snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, Board(Direction.TO_WORK, listOf(dep(4, 0)), now)), compact = true)
+        val text = v.findViewById<TextView>(R.id.badge_text).currentTextColor
+        assertEquals(context.getColor(R.color.badge_text), text)
+        assertEquals(0xFFFFFFFF.toInt(), official)
+    }
+
+    @Test
+    fun `mixed lines get the default badge colour`() {
+        val tram18 = Departure("18", "Townsville, Hill", now + 2 * min, now + 2 * min, 0, true, operator = "TPG")
+        val tram12 = Departure("12", "Townsville, Hill", now + 5 * min, now + 5 * min, 0, true, operator = "TPG")
+        val v = render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, Board(Direction.TO_WORK, listOf(tram18, tram12), now)), compact = true)
+        assertEquals("18/12", v.text(R.id.badge_text))
+        assertEquals(context.getColor(R.color.badge_text), v.findViewById<TextView>(R.id.badge_text).currentTextColor)
+    }
+
+    @Test
+    fun `station board shows platforms and keeps other towns`() {
+        val board = Board(
+            null,
+            listOf(
+                Departure("IR 15", "Elsewhere, Gare", now + 3 * min, now + 3 * min, 0, true, platform = "3"),
+                Departure("7", "Townsville, Hill", now + 4 * min, now + 4 * min, 0, true),
+            ),
+            now,
+            "8500001",
+        )
+        val v = station(board, rows = 2)
+        assertEquals("Elsewhere, Gare · Pl. 3", v.text(R.id.r1_dest))
+        assertEquals("Hill", v.text(R.id.r2_dest))
+    }
+
+    @Test
+    fun `screen readers hear line and destination`() {
+        val d = Departure("7", "Townsville, Hill", now + 5 * min, now + 5 * min, 0, true)
+        assertEquals(
+            "Line 7 to Hill. Departs 07:55, on time, 5 min",
+            app.departures.ui.Texts.describe(context, d, now, "Townsville, Market"),
+        )
+    }
+
     // --- Station board ---
 
     private fun station(board: Board?, rows: Int, stop: Stop? = market, offline: Boolean = false): View =
@@ -177,7 +242,7 @@ class WidgetUpdaterTest {
         )
         val v = station(board, rows = 2)
         assertEquals("Townsville, Market", v.text(R.id.title))
-        assertEquals("07:49", v.text(R.id.subtitle))
+        assertEquals("Updated 07:49", v.text(R.id.subtitle))
         assertEquals("7", v.text(R.id.r1_line))
         assertEquals("Hill", v.text(R.id.r1_dest))
         assertEquals("07:52", v.text(R.id.r1_time))

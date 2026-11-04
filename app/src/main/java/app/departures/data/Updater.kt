@@ -94,7 +94,17 @@ class Updater(
      * installer. The result arrives in [InstallStatusActivity].
      */
     suspend fun downloadAndInstall(info: UpdateInfo) = withContext(Dispatchers.IO) {
-        install(downloadVerified(info))
+        val apk = downloadVerified(info)
+        try {
+            install(apk)
+        } catch (e: SecurityException) {
+            throw IOException("Android refused the install: ${e.message}", e)
+        } catch (e: IllegalStateException) {
+            throw IOException("Android's installer is busy: ${e.message}", e)
+        } finally {
+            // The installer has its own copy once the session is committed.
+            apk.delete()
+        }
     }
 
     /** Downloads and verifies the APK; throws [IOException] (and deletes it) if it doesn't match. */

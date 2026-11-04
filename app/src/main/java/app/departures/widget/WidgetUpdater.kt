@@ -14,6 +14,7 @@ import android.widget.RemoteViews
 import app.departures.R
 import app.departures.core.Departure
 import app.departures.core.Format
+import app.departures.core.LineColor
 import app.departures.core.LineColors
 import app.departures.core.RefreshPolicy
 import app.departures.data.Commute
@@ -25,18 +26,29 @@ import app.departures.ui.Texts
  * Draws all widgets from cached data. Cheap enough to call often: no network, no location.
  *
  * Time remaining is shown in whole minutes ("5 min"), redrawn by a non-waking exact alarm at the
- * moment the minute changes. That needs the "Alarms & reminders" permission (off by default on
- * Android 14+). Without it the widgets fall back to a count-down [android.widget.Chronometer]
- * that the launcher ticks every second by itself, so the time shown is never stale.
+ * moment the minute changes (USE_EXACT_ALARM on Android 13+, "Alarms & reminders" on 12).
+ * Without exact alarms the widgets fall back to a count-down [android.widget.Chronometer] that
+ * the launcher ticks every second by itself, so the time shown is never stale.
+ *
+ * The launcher reuses the existing view when it redraws with the same layout, so every render
+ * must set everything it changes anywhere (visibility, colours), not just what differs from the
+ * layout's defaults.
  */
 object WidgetUpdater {
 
+    /** Which widget, if any, shows "updating…" while a refresh you asked for runs. */
+    sealed interface Refreshing {
+        data object None : Refreshing
+        data object Commute : Refreshing
+        data class Station(val stopId: String) : Refreshing
+    }
+
     /** Redraws the commute and station-board widgets and schedules the next redraw. */
-    fun renderAll(context: Context, refreshing: Boolean = false, now: Long = System.currentTimeMillis()) {
+    fun renderAll(context: Context, refreshing: Refreshing = Refreshing.None, now: Long = System.currentTimeMillis()) {
         val minutes = canUseExactAlarms(context)
         val next = listOfNotNull(
-            renderCommute(context, refreshing, now, minutes),
-            StationWidgetUpdater.render(context, refreshing, now, minutes),
+            renderCommute(context, refreshing == Refreshing.Commute, now, minutes),
+            StationWidgetUpdater.render(context, (refreshing as? Refreshing.Station)?.stopId, now, minutes),
         ).minOrNull()
         if (next == null) cancelTick(context) else scheduleTick(context, next, now, exact = minutes)
     }
@@ -128,22 +140,22 @@ object WidgetUpdater {
             views.setOnClickPendingIntent(R.id.refresh, broadcast(context, DeparturesWidget.ACTION_REFRESH, 2))
         }
         views.setContentDescription(R.id.swap, context.getString(R.string.show_direction, to.label, from.label))
+        // Hidden while not set up; must be shown again explicitly (the view is reused).
+        views.setViewVisibility(R.id.swap, View.VISIBLE)
+        if (!compact) views.setViewVisibility(R.id.refresh, View.VISIBLE)
 
         val upcoming = s.board?.upcoming(now).orEmpty().take(2)
         val lines = upcoming.map { it.line }.filter { it.isNotBlank() }.distinct().joinToString("/")
         views.setViewVisibility(R.id.badge, if (lines.isEmpty()) View.GONE else View.VISIBLE)
         views.setTextViewText(R.id.badge_text, lines)
-        upcoming.firstOrNull()?.let { tintBadge(views, R.id.badge_bg, R.id.badge_text, it) }
+        // One badge for both departures: the line colour only if they share it.
+        val colours = upcoming.map { LineColors.of(it.operator, it.line) }.distinct()
+        tintBadge(context, views, R.id.badge_bg, R.id.badge_text, colours.singleOrNull())
 
-        bindRow(context, views, upcoming.getOrNull(0), now, R.id.row1, R.id.time1, R.id.delay1, R.id.count1, R.id.min1, minutes)
-        bindRow(context, views, upcoming.getOrNull(1), now, R.id.row2, R.id.time2, R.id.delay2, R.id.count2, R.id.min2, minutes)
+        bindRow(context, views, upcoming.getOrNull(0), now, R.id.row1, R.id.time1, R.id.delay1, R.id.count1, R.id.min1, minutes, from.name)
+        bindRow(context, views, upcoming.getOrNull(1), now, R.id.row2, R.id.time2, R.id.delay2, R.id.count2, R.id.min2, minutes, from.name)
 
-        val empty = when {
-            upcoming.isNotEmpty() -> null
-            s.board == null && s.offline -> context.getString(R.string.no_connection)
-            s.board == null -> context.getString(R.string.loading)
-            else -> context.getString(R.string.no_departures)
-        }
+        val empty = Texts.empty(context, upcoming.isNotEmpty(), s.board != null, s.offline)
         views.setViewVisibility(R.id.empty, if (empty == null) View.GONE else View.VISIBLE)
         views.setTextViewText(R.id.empty, empty)
 
@@ -152,13 +164,12 @@ object WidgetUpdater {
     }
 
     /**
-     * Colours a line badge with the line's official colours, if known; otherwise the layout's
-     * default badge colours stay.
+     * Colours a line badge: the line's official colours if known, the app's default otherwise.
+     * Always sets both, because the launcher reuses the view and would keep an old colour.
      */
-    internal fun tintBadge(views: RemoteViews, background: Int, text: Int, departure: Departure) {
-        val colour = LineColors.of(departure.operator, departure.line) ?: return
-        views.setInt(background, "setColorFilter", colour.background)
-        views.setTextColor(text, colour.text)
+    internal fun tintBadge(context: Context, views: RemoteViews, background: Int, text: Int, colour: LineColor?) {
+        views.setInt(background, "setColorFilter", colour?.background ?: context.getColor(R.color.badge_bg))
+        views.setTextColor(text, colour?.text ?: context.getColor(R.color.badge_text))
     }
 
     /** Fills one departure into the given views; hides [row] when there is none. */
@@ -173,6 +184,7 @@ object WidgetUpdater {
         count: Int,
         min: Int,
         minutes: Boolean,
+        stopName: String?,
     ) {
         if (departure == null) {
             views.setViewVisibility(row, View.GONE)
@@ -188,7 +200,7 @@ object WidgetUpdater {
         views.setViewVisibility(count, if (minutes) View.GONE else View.VISIBLE)
         views.setViewVisibility(min, if (minutes) View.VISIBLE else View.GONE)
         views.setTextViewText(min, Format.countdown(now, departure))
-        views.setContentDescription(row, Texts.describe(context, departure, now))
+        views.setContentDescription(row, Texts.describe(context, departure, now, stopName))
     }
 
     private fun openApp(context: Context): PendingIntent = PendingIntent.getActivity(

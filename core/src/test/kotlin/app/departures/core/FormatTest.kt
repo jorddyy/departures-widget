@@ -34,4 +34,17 @@ class FormatTest {
         assertNull(Format.delay(dep(0, 0)))
         assertNull(Format.delay(dep(0, null)))
     }
+
+    @Test
+    fun `destination drops the town only when it is the stop's own town`() {
+        assertEquals("Bel-Air", Format.destination("Genève, Bel-Air", "Genève, Cornavin"))
+        assertEquals("Meyrin, Gravière", Format.destination("Meyrin, Gravière", "Genève, Cornavin"))
+        assertEquals("Townsville", Format.destination("Townsville", "Townsville, Market"))
+        assertEquals("Bern, Bahnhof", Format.destination("Bern, Bahnhof", null))
+    }
+
+    @Test
+    fun `API date time is Swiss local time`() {
+        assertEquals("2026-11-03 08:00", Format.apiDateTime(now))
+    }
 }

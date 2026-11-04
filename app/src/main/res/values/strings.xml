@@ -26,7 +26,9 @@
     <string name="updating">Updating…</string>
     <string name="loading">Loading departures…</string>
     <string name="no_connection">No connection</string>
-    <string name="no_departures">No more departures listed</string>
+    <string name="no_departures">No departures found for the next few hours</string>
+    <string name="destination_platform">%1$s · Pl. %2$s</string>
+    <string name="platform">Platform %1$s</string>
     <string name="setup_needed">Tap to choose your Home and Work stops</string>
     <string name="station_setup_needed">Tap to choose a stop</string>
 
@@ -34,7 +36,6 @@
     <string name="refresh">Refresh</string>
 
     <string name="auto">Auto</string>
-    <string name="live">live</string>
     <string name="scheduled">scheduled</string>
     <string name="on_time">on time</string>
     <string name="late">%1$d min late</string>
@@ -81,7 +82,7 @@
     <string name="update_retry">Show it again</string>
     <string name="update_check">Check for updates</string>
 
-    <string name="a11y_departure">Departs %1$s, %2$s, %3$s</string>
+    <string name="a11y_departure">Line %1$s to %2$s. Departs %3$s, %4$s, %5$s</string>
     <string name="a11y_scheduled">scheduled time</string>
     <string name="a11y_on_time">on time</string>
     <plurals name="a11y_late">

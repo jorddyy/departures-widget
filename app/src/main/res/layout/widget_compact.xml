@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Compact two-line layout, the default size (4x1 on a One UI home screen):
      [7] Market → Station · nearby                     ⇄
-     07:54 +2  in 05:41                    08:02  in 13:41 -->
+     07:54 +2  5 min                         08:02  13 min -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/background"
     android:layout_width="match_parent"
@@ -73,9 +73,12 @@
 
         <ImageView
             android:id="@+id/swap"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:padding="7dp"
+            android:layout_width="48dp"
+            android:layout_height="40dp"
+            android:paddingStart="15dp"
+            android:paddingTop="11dp"
+            android:paddingEnd="9dp"
+            android:paddingBottom="11dp"
             android:src="@drawable/ic_swap" />
     </LinearLayout>
 
