@@ -34,6 +34,11 @@ class StationboardParserTest {
     }
 
     @Test
+    fun `keeps the operator code for line colours`() {
+        assertEquals("XX", StationboardParser.parse(fixture("market.json"), STATION).first().operator)
+    }
+
+    @Test
     fun `station board keeps every departure`() {
         assertEquals(5, StationboardParser.parseAll(fixture("market.json")).size)
     }

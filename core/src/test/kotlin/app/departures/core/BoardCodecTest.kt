@@ -10,7 +10,7 @@ class BoardCodecTest {
         val board = Board(
             Direction.TO_HOME,
             listOf(
-                Departure("7", "Townsville, Harbour", 1_000, 61_000, 1, true, "A"),
+                Departure("7", "Townsville, Harbour", 1_000, 61_000, 1, true, "A", "XX"),
                 Departure("7", "Townsville, Depot", 2_000, 2_000, null, false),
             ),
             fetchedAtEpochMs = 500,

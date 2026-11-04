@@ -64,7 +64,7 @@
     <string name="search_hint">Type at least two letters, e.g. a town and stop name.</string>
     <string name="searching">Searching…</string>
     <string name="no_stops_found">No stops found.</string>
-    <string name="privacy_note">Departures from transport.opendata.ch. Only stop ids and the stop names you search for are sent. Your location never leaves the phone. Update checks fetch a small version file from github.com when you open the app, at most every 6 hours.</string>
+    <string name="privacy_note">Departures from transport.opendata.ch. Only stop ids and the stop names you search for are sent. Your location never leaves the phone. Update checks fetch a small version file from github.com when you open the app, at most every 6 hours. Line colours: © OpenStreetMap contributors (ODbL) and Traewelling line-colors (CC0).</string>
 
     <string name="version_line">Version %1$s (build %2$d, %3$s)</string>
     <string name="update_checking">Checking for updates…</string>

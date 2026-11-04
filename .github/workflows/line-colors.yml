@@ -1,7 +1,8 @@
 name: Line colours
 
-# Collects official line colours from open sources (see tools/line_colors.py). Manual, or when
-# the script changes; read-only.
+# Regenerates core/src/main/resources/line_colors.csv from open sources (see
+# tools/line_colors.py) and uploads it as an artifact; commit it to update the app's colours.
+# Manual, or when the script changes; read-only.
 on:
   workflow_dispatch:
   push:
@@ -22,4 +23,4 @@ jobs:
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: line-colors
-          path: line-colors-probe.csv
+          path: core/src/main/resources/line_colors.csv

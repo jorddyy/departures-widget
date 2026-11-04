@@ -3,6 +3,7 @@ package app.departures
 import android.content.Context
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.test.core.app.ApplicationProvider
 import app.departures.core.Board
@@ -16,6 +17,8 @@ import app.departures.data.Snapshot
 import app.departures.widget.StationWidgetUpdater
 import app.departures.widget.WidgetUpdater
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
+import org.junit.Assert.assertNull
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -51,7 +54,7 @@ class WidgetUpdaterTest {
 
         assertEquals("→ Station", v.text(R.id.title))
         assertEquals("From Market · you're near Market", v.text(R.id.subtitle))
-        assertEquals("7", v.text(R.id.badge))
+        assertEquals("7", v.text(R.id.badge_text))
         assertEquals("07:54", v.text(R.id.time1))
         assertEquals("+2", v.text(R.id.delay1))
         assertEquals("08:02", v.text(R.id.time2))
@@ -63,7 +66,7 @@ class WidgetUpdaterTest {
     @Test
     fun `badge lists each line shown once`() {
         val board = Board(Direction.TO_WORK, listOf(dep(2, 0, "7"), dep(4, 0, "S1")), now)
-        assertEquals("7/S1", render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, board), compact = true).text(R.id.badge))
+        assertEquals("7/S1", render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, board), compact = true).text(R.id.badge_text))
     }
 
     @Test
@@ -144,6 +147,18 @@ class WidgetUpdaterTest {
         assertEquals(now + min, WidgetUpdater.nextTick(now, nextRender, shown, minutes = true))
         // Seconds countdown: the launcher ticks it, so only redraw when the tram leaves.
         assertEquals(nextRender, WidgetUpdater.nextTick(now, nextRender, shown, minutes = false))
+    }
+
+    @Test
+    fun `badges use the official line colour when known`() {
+        val tram18 = Departure("18", "Townsville, Hill", now + 2 * min, now + 2 * min, 0, true, operator = "TPG")
+        val v = render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, Board(Direction.TO_WORK, listOf(tram18), now)), compact = true)
+        assertEquals(0xFFFFFFFF.toInt(), v.findViewById<TextView>(R.id.badge_text).currentTextColor)
+        assertNotNull(v.findViewById<ImageView>(R.id.badge_bg).colorFilter)
+
+        // Unknown operator: default badge, no colour filter.
+        val plain = render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, Board(Direction.TO_WORK, listOf(dep(2, 0)), now)), compact = true)
+        assertNull(plain.findViewById<ImageView>(R.id.badge_bg).colorFilter)
     }
 
     // --- Station board ---
