@@ -32,8 +32,13 @@ object StationWidgetUpdater {
         intArrayOf(R.id.r7, R.id.r7_line, R.id.r7_dest, R.id.r7_time, R.id.r7_delay, R.id.r7_count, R.id.r7_min, R.id.r7_line_bg),
     )
 
-    /** Widget height (dp) needed for each row count; the launcher picks the largest that fits. */
-    private val SIZES = listOf(2 to 40f, 3 to 90f, 4 to 120f, 5 to 150f, 7 to 200f)
+    /**
+     * Widget height (dp) needed for each row count; the launcher picks the largest that fits.
+     * About 45dp for the header and padding plus 26dp per row. That is more than a row measures,
+     * because One UI reports a widget taller than it draws it; at these thresholds the last
+     * row is never cut off.
+     */
+    private val SIZES = listOf(2 to 40f, 3 to 123f, 4 to 149f, 5 to 175f, 6 to 201f, 7 to 227f)
 
     fun ids(context: Context): IntArray =
         AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, StationWidget::class.java))

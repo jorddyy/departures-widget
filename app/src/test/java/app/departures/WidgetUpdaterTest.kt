@@ -19,6 +19,7 @@ import app.departures.widget.WidgetUpdater
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -224,6 +225,26 @@ class WidgetUpdaterTest {
             "Line 7 to Hill. Departs 07:55, on time, 5 min",
             app.departures.ui.Texts.describe(context, d, now, "Townsville, Market"),
         )
+    }
+
+    @Test
+    fun `badge shape covers the number in every layout`() {
+        // The coloured shape must be measured to the number's size, not to nothing.
+        val tram18 = Departure("18", "Townsville, Hill", now + 2 * min, now + 2 * min, 0, true, operator = "TPG")
+        val board = Board(Direction.TO_WORK, listOf(tram18), now)
+        val unspecified = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        fun check(v: View, bg: Int, text: Int) {
+            v.measure(View.MeasureSpec.makeMeasureSpec(1000, View.MeasureSpec.AT_MOST), unspecified)
+            val shape = v.findViewById<View>(bg)
+            val number = v.findViewById<View>(text)
+            assertTrue(number.measuredHeight > 0)
+            assertEquals(number.measuredWidth, shape.measuredWidth)
+            assertEquals(number.measuredHeight, shape.measuredHeight)
+        }
+        for (compact in listOf(true, false)) {
+            check(render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, board), compact = compact), R.id.badge_bg, R.id.badge_text)
+        }
+        check(station(Board(null, listOf(tram18), now, "8500001"), rows = 2), R.id.r1_line_bg, R.id.r1_line)
     }
 
     // --- Station board ---
