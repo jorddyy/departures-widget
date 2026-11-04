@@ -23,13 +23,13 @@ import app.departures.ui.Texts
 object StationWidgetUpdater {
 
     private val ROWS = listOf(
-        intArrayOf(R.id.r1, R.id.r1_line, R.id.r1_dest, R.id.r1_time, R.id.r1_delay, R.id.r1_count, R.id.r1_min, R.id.r1_line_bg),
-        intArrayOf(R.id.r2, R.id.r2_line, R.id.r2_dest, R.id.r2_time, R.id.r2_delay, R.id.r2_count, R.id.r2_min, R.id.r2_line_bg),
-        intArrayOf(R.id.r3, R.id.r3_line, R.id.r3_dest, R.id.r3_time, R.id.r3_delay, R.id.r3_count, R.id.r3_min, R.id.r3_line_bg),
-        intArrayOf(R.id.r4, R.id.r4_line, R.id.r4_dest, R.id.r4_time, R.id.r4_delay, R.id.r4_count, R.id.r4_min, R.id.r4_line_bg),
-        intArrayOf(R.id.r5, R.id.r5_line, R.id.r5_dest, R.id.r5_time, R.id.r5_delay, R.id.r5_count, R.id.r5_min, R.id.r5_line_bg),
-        intArrayOf(R.id.r6, R.id.r6_line, R.id.r6_dest, R.id.r6_time, R.id.r6_delay, R.id.r6_count, R.id.r6_min, R.id.r6_line_bg),
-        intArrayOf(R.id.r7, R.id.r7_line, R.id.r7_dest, R.id.r7_time, R.id.r7_delay, R.id.r7_count, R.id.r7_min, R.id.r7_line_bg),
+        intArrayOf(R.id.r1, R.id.r1_line, R.id.r1_dest, R.id.r1_time, R.id.r1_delay, R.id.r1_count, R.id.r1_min, R.id.r1_line_bg, R.id.r1_platform),
+        intArrayOf(R.id.r2, R.id.r2_line, R.id.r2_dest, R.id.r2_time, R.id.r2_delay, R.id.r2_count, R.id.r2_min, R.id.r2_line_bg, R.id.r2_platform),
+        intArrayOf(R.id.r3, R.id.r3_line, R.id.r3_dest, R.id.r3_time, R.id.r3_delay, R.id.r3_count, R.id.r3_min, R.id.r3_line_bg, R.id.r3_platform),
+        intArrayOf(R.id.r4, R.id.r4_line, R.id.r4_dest, R.id.r4_time, R.id.r4_delay, R.id.r4_count, R.id.r4_min, R.id.r4_line_bg, R.id.r4_platform),
+        intArrayOf(R.id.r5, R.id.r5_line, R.id.r5_dest, R.id.r5_time, R.id.r5_delay, R.id.r5_count, R.id.r5_min, R.id.r5_line_bg, R.id.r5_platform),
+        intArrayOf(R.id.r6, R.id.r6_line, R.id.r6_dest, R.id.r6_time, R.id.r6_delay, R.id.r6_count, R.id.r6_min, R.id.r6_line_bg, R.id.r6_platform),
+        intArrayOf(R.id.r7, R.id.r7_line, R.id.r7_dest, R.id.r7_time, R.id.r7_delay, R.id.r7_count, R.id.r7_min, R.id.r7_line_bg, R.id.r7_platform),
     )
 
     /**
@@ -128,13 +128,26 @@ object StationWidgetUpdater {
             },
         )
         val upcoming = board?.upcoming(now).orEmpty()
+        // The platform column appears only when a shown departure has a platform.
+        val showPlatform = upcoming.take(rows).any { !it.platform.isNullOrBlank() }
         ROWS.forEachIndexed { i, ids ->
             val d = upcoming.getOrNull(i)?.takeIf { i < rows }
             WidgetUpdater.bindRow(context, views, d, now, ids[0], ids[3], ids[4], ids[5], ids[6], minutes, stop.name)
             if (d != null) {
                 views.setTextViewText(ids[1], d.line)
                 WidgetUpdater.tintBadge(context, views, ids[7], ids[1], LineColors.of(d.operator, d.line))
-                views.setTextViewText(ids[2], Texts.destinationWithPlatform(context, d, stop.name))
+                views.setTextViewText(ids[2], Format.destination(d.destination, stop.name))
+                val platform = d.platform?.trim().orEmpty()
+                views.setTextViewText(ids[8], platform)
+                views.setContentDescription(ids[8], context.getString(R.string.platform, platform))
+                views.setViewVisibility(
+                    ids[8],
+                    when {
+                        !showPlatform -> View.GONE
+                        platform.isEmpty() -> View.INVISIBLE // keep the column aligned
+                        else -> View.VISIBLE
+                    },
+                )
             }
         }
         val empty = Texts.empty(context, upcoming.isNotEmpty(), board != null, offline)

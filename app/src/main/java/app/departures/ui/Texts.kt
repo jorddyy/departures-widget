@@ -53,13 +53,6 @@ object Texts {
         else -> context.getString(R.string.no_departures)
     }
 
-    /** "Hill" or "Lausanne, Gare", plus " · Pl. 3" when the platform is known. */
-    fun destinationWithPlatform(context: Context, d: Departure, stopName: String?): String {
-        val destination = Format.destination(d.destination, stopName)
-        val platform = d.platform?.trim().orEmpty()
-        return if (platform.isEmpty()) destination else context.getString(R.string.destination_platform, destination, platform)
-    }
-
     /** Spoken description of a departure for screen readers: line, destination, time, delay. */
     fun describe(context: Context, d: Departure, now: Long, stopName: String? = null): String {
         val delay = d.delayMinutes

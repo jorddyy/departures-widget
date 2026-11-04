@@ -214,8 +214,16 @@ class WidgetUpdaterTest {
             "8500001",
         )
         val v = station(board, rows = 2)
-        assertEquals("Elsewhere, Gare · Pl. 3", v.text(R.id.r1_dest))
+        assertEquals("Elsewhere, Gare", v.text(R.id.r1_dest))
+        assertEquals("3", v.text(R.id.r1_platform))
+        assertEquals(View.VISIBLE, v.visibility(R.id.r1_platform))
         assertEquals("Hill", v.text(R.id.r2_dest))
+        // No platform for this row, but the column stays so times line up.
+        assertEquals(View.INVISIBLE, v.visibility(R.id.r2_platform))
+
+        // A board without any platforms has no platform column.
+        val plain = station(Board(null, listOf(board.departures[1]), now, "8500001"), rows = 2)
+        assertEquals(View.GONE, plain.visibility(R.id.r1_platform))
     }
 
     @Test
@@ -245,6 +253,30 @@ class WidgetUpdaterTest {
             check(render(snapshot(Direction.TO_WORK, Reason.TIME_OF_DAY, board), compact = compact), R.id.badge_bg, R.id.badge_text)
         }
         check(station(Board(null, listOf(tram18), now, "8500001"), rows = 2), R.id.r1_line_bg, R.id.r1_line)
+    }
+
+    @Test
+    fun `station board columns line up whatever the delay`() {
+        val board = Board(
+            null,
+            listOf(
+                Departure("68", "Townsville, Hill", now + 3 * min, now + 4 * min, 1, true),
+                Departure("18", "Townsville, Harbour", now + 9 * min, now + 9 * min, 0, true),
+            ),
+            now,
+            "8500001",
+        )
+        val v = station(board, rows = 2)
+        v.measure(
+            View.MeasureSpec.makeMeasureSpec(1000, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+        )
+        v.layout(0, 0, v.measuredWidth, v.measuredHeight)
+        // Rows have the same width, so positions within a row are comparable.
+        fun left(id: Int) = v.findViewById<View>(id).left
+        assertEquals("+1", v.text(R.id.r1_delay))
+        assertEquals(left(R.id.r1_time), left(R.id.r2_time))
+        assertEquals(left(R.id.r1_min), left(R.id.r2_min))
     }
 
     // --- Station board ---

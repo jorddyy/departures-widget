@@ -27,7 +27,6 @@
     <string name="loading">Loading departures…</string>
     <string name="no_connection">No connection</string>
     <string name="no_departures">No departures found for the next few hours</string>
-    <string name="destination_platform">%1$s · Pl. %2$s</string>
     <string name="platform">Platform %1$s</string>
     <string name="setup_needed">Tap to choose your Home and Work stops</string>
     <string name="station_setup_needed">Tap to choose a stop</string>
