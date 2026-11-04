@@ -1,0 +1,253 @@
+{
+ "station": {
+  "id": "8500002",
+  "name": "Townsville, Station",
+  "coordinate": {
+   "type": "WGS84",
+   "x": 47.0,
+   "y": 7.0
+  }
+ },
+ "stationboard": [
+  {
+   "stop": {
+    "station": {
+     "id": "8500002",
+     "name": "Townsville, Station",
+     "coordinate": {
+      "type": "WGS84",
+      "x": 47.0,
+      "y": 7.0
+     }
+    },
+    "departure": "2026-11-04T00:36:00+0100",
+    "departureTimestamp": 1793748960,
+    "delay": 3,
+    "platform": null,
+    "prognosis": {
+     "platform": null,
+     "departure": "2026-11-04T00:39:00+0100"
+    }
+   },
+   "name": "0007",
+   "category": "T",
+   "number": "7",
+   "operator": "XX",
+   "to": "Townsville, Harbour",
+   "passList": [
+    {
+     "station": {
+      "id": null,
+      "name": null,
+      "coordinate": {
+       "type": "WGS84",
+       "x": null,
+       "y": null
+      }
+     },
+     "departure": "2026-11-04T00:36:00+0100"
+    },
+    {
+     "station": {
+      "id": "8500005",
+      "name": "Townsville, Park",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500001",
+      "name": "Townsville, Market",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500006",
+      "name": "Townsville, School",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500003",
+      "name": "Townsville, Harbour",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    }
+   ]
+  },
+  {
+   "stop": {
+    "station": {
+     "id": "8500002",
+     "name": "Townsville, Station",
+     "coordinate": {
+      "type": "WGS84",
+      "x": 47.0,
+      "y": 7.0
+     }
+    },
+    "departure": "2026-11-04T00:57:00+0100",
+    "departureTimestamp": 1793750220,
+    "delay": null,
+    "platform": null,
+    "prognosis": {
+     "platform": null,
+     "departure": null
+    }
+   },
+   "name": "0007",
+   "category": "T",
+   "number": "7",
+   "operator": "XX",
+   "to": "Townsville, Depot",
+   "passList": [
+    {
+     "station": {
+      "id": null,
+      "name": null,
+      "coordinate": {
+       "type": "WGS84",
+       "x": null,
+       "y": null
+      }
+     },
+     "departure": "2026-11-04T00:57:00+0100"
+    },
+    {
+     "station": {
+      "id": "8500005",
+      "name": "Townsville, Park",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500004",
+      "name": "Townsville, Depot",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    }
+   ]
+  },
+  {
+   "stop": {
+    "station": {
+     "id": "8500002",
+     "name": "Townsville, Station",
+     "coordinate": {
+      "type": "WGS84",
+      "x": 47.0,
+      "y": 7.0
+     }
+    },
+    "departure": "2026-11-04T01:13:00+0100",
+    "departureTimestamp": 1793751180,
+    "delay": null,
+    "platform": null,
+    "prognosis": {
+     "platform": null,
+     "departure": null
+    }
+   },
+   "name": "0001",
+   "category": "S",
+   "number": "1",
+   "operator": "XX",
+   "to": "Townsville, Harbour",
+   "passList": [
+    {
+     "station": {
+      "id": null,
+      "name": null,
+      "coordinate": {
+       "type": "WGS84",
+       "x": null,
+       "y": null
+      }
+     },
+     "departure": "2026-11-04T01:13:00+0100"
+    },
+    {
+     "station": {
+      "id": "8500005",
+      "name": "Townsville, Park",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500001",
+      "name": "Townsville, Market",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500006",
+      "name": "Townsville, School",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500003",
+      "name": "Townsville, Harbour",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    }
+   ]
+  }
+ ]
+}

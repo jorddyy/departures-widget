@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Departures</string>
+    <string name="widget_name">Commute</string>
+    <string name="widget_description">Next departures between your Home and Work stops</string>
+    <string name="station_widget_name">Station board</string>
+    <string name="station_widget_description">Next departures at a stop of your choice</string>
+
+    <string name="towards">→ %1$s</string>
+    <string name="route">%1$s → %2$s</string>
+    <string name="status_near">nearby</string>
+    <string name="status_manual">manual</string>
+    <string name="status_away">away</string>
+    <string name="status_time">by time</string>
+    <string name="updating_short">updating…</string>
+    <string name="offline_short">offline</string>
+    <string name="subtitle">From %1$s · %2$s</string>
+    <string name="reason_near">you\'re near %1$s</string>
+    <string name="reason_manual">manual until %1$s</string>
+    <string name="reason_away">away · by time of day</string>
+    <string name="reason_time">by time of day</string>
+
+    <string name="countdown_format">in %s</string>
+    <string name="updated_at">Updated %1$s</string>
+    <string name="offline_since">Offline · last update %1$s</string>
+    <string name="updating">Updating…</string>
+    <string name="loading">Loading departures…</string>
+    <string name="no_connection">No connection</string>
+    <string name="no_departures">No more departures listed</string>
+    <string name="setup_needed">Tap to choose your Home and Work stops</string>
+    <string name="station_setup_needed">Open the widget settings to choose a stop</string>
+
+    <string name="show_direction">Showing departures to %1$s. Tap to show departures to %2$s instead</string>
+    <string name="refresh">Refresh</string>
+
+    <string name="auto">Auto</string>
+    <string name="live">live</string>
+    <string name="scheduled">scheduled</string>
+    <string name="on_time">on time</string>
+    <string name="late">%1$d min late</string>
+    <string name="early">%1$d min early</string>
+
+    <string name="location_title">Automatic direction</string>
+    <string name="location_off_body">Let the app use your approximate location to tell whether you\'re near Home or Work. Without it, mornings show departures to Work and afternoons to Home.</string>
+    <string name="location_fg_body">The widget picks the direction when you open the app. Allow location \"all the time\" so the widget can switch on its own. It only reads approximate location, never in the background unless the screen is on.</string>
+    <string name="location_on_body">The widget picks the direction from your approximate location.</string>
+    <string name="location_disabled_body">Location is turned off on this phone. The direction follows the time of day.</string>
+    <string name="allow">Allow</string>
+    <string name="allow_all_the_time">Allow all the time</string>
+    <string name="minutes_title">Countdown in minutes</string>
+    <string name="minutes_body">The widget is counting down in seconds. Allow \"Alarms &amp; reminders\" and it shows whole minutes instead, updated the moment the minute changes. These alarms never wake the phone.</string>
+    <string name="home">Home</string>
+    <string name="work">Work</string>
+    <string name="not_set">Not set</string>
+    <string name="choose">Choose</string>
+    <string name="change">Change</string>
+    <string name="setup_title">Set up your commute</string>
+    <string name="setup_intro">Choose the stop near your home and the one near your work. The commute widget then shows the next direct departures between them, in the direction you\'re likely going. Your stops are stored only on this phone.</string>
+    <string name="stops_title">Your stops</string>
+    <string name="choose_home">Home stop</string>
+    <string name="choose_work">Work stop</string>
+    <string name="choose_station">Station board stop</string>
+    <string name="search_stop">Stop name</string>
+    <string name="search_hint">Type at least two letters, e.g. a town and stop name.</string>
+    <string name="searching">Searching…</string>
+    <string name="no_stops_found">No stops found.</string>
+    <string name="privacy_note">Departures from transport.opendata.ch. Only stop ids and the stop names you search for are sent. Your location never leaves the phone. Update checks fetch a small version file from github.com when you open the app, at most every 6 hours.</string>
+
+    <string name="version_line">Version %1$s (build %2$d, %3$s)</string>
+    <string name="update_checking">Checking for updates…</string>
+    <string name="update_up_to_date">You have the latest version.</string>
+    <string name="update_available">Update available: version %1$s (build %2$d).</string>
+    <string name="update_downloading">Downloading version %1$s…</string>
+    <string name="update_needs_permission">Allow \"Install unknown apps\" for Departures, then come back. The update continues by itself.</string>
+    <string name="update_offline">Couldn\'t reach GitHub to check for updates.</string>
+    <string name="update_failed">Update failed.</string>
+    <string name="update_install_failed">Android couldn\'t install the update: %1$s</string>
+    <string name="update_conflict">This update is signed with a different key than the installed app. Uninstall Departures once, then install the latest version from the GitHub release page. Updates work from the app after that.</string>
+    <string name="update_now">Update</string>
+    <string name="update_check">Check for updates</string>
+
+    <string name="a11y_departure">Departs %1$s, %2$s, %3$s</string>
+    <string name="a11y_scheduled">scheduled time</string>
+    <string name="a11y_on_time">on time</string>
+    <plurals name="a11y_late">
+        <item quantity="one">%d minute late</item>
+        <item quantity="other">%d minutes late</item>
+    </plurals>
+    <plurals name="a11y_early">
+        <item quantity="one">%d minute early</item>
+        <item quantity="other">%d minutes early</item>
+    </plurals>
+</resources>

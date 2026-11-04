@@ -1,0 +1,31 @@
+{
+ "stations": [
+  {
+   "id": "8500001",
+   "name": "Townsville, Market",
+   "coordinate": {
+    "type": "WGS84",
+    "x": 47.001,
+    "y": 7.002
+   }
+  },
+  {
+   "id": null,
+   "name": "Market Caf\u00e9",
+   "coordinate": {
+    "type": "WGS84",
+    "x": 47.0,
+    "y": 7.0
+   }
+  },
+  {
+   "id": "8500009",
+   "name": "Townsville, Market Hall",
+   "coordinate": {
+    "type": "WGS84",
+    "x": null,
+    "y": null
+   }
+  }
+ ]
+}

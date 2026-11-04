@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A simple tram front on the adaptive-icon safe zone (66dp of 108dp). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <!-- pantograph -->
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="2.5" android:strokeLineCap="round"
+        android:pathData="M46,30 L54,36 L62,30" />
+    <!-- body -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M40,40 Q40,36 44,36 L64,36 Q68,36 68,40 L68,70 Q68,74 64,74 L44,74 Q40,74 40,70 Z" />
+    <!-- windscreen -->
+    <path android:fillColor="#5B3FA8"
+        android:pathData="M44,41 L64,41 L64,55 L44,55 Z" />
+    <!-- lights -->
+    <path android:fillColor="#5B3FA8" android:pathData="M47,64 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" />
+    <path android:fillColor="#5B3FA8" android:pathData="M61,64 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" />
+    <!-- wheels -->
+    <path android:strokeColor="#FFFFFF" android:strokeWidth="3" android:strokeLineCap="round"
+        android:pathData="M44,78 L48,78 M60,78 L64,78" />
+</vector>

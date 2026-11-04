@@ -1,0 +1,321 @@
+{
+ "station": {
+  "id": "8500001",
+  "name": "Townsville, Market",
+  "coordinate": {
+   "type": "WGS84",
+   "x": 47.0,
+   "y": 7.0
+  }
+ },
+ "stationboard": [
+  {
+   "stop": {
+    "station": {
+     "id": "8500001",
+     "name": "Townsville, Market",
+     "coordinate": {
+      "type": "WGS84",
+      "x": 47.0,
+      "y": 7.0
+     }
+    },
+    "departure": "2026-11-03T08:12:00+0100",
+    "departureTimestamp": 1793689920,
+    "delay": 0,
+    "platform": null,
+    "prognosis": {
+     "platform": null,
+     "departure": "2026-11-03T08:12:00+0100"
+    }
+   },
+   "name": "0007",
+   "category": "T",
+   "number": "7",
+   "operator": "XX",
+   "to": "Townsville, Hill",
+   "passList": [
+    {
+     "station": {
+      "id": null,
+      "name": null,
+      "coordinate": {
+       "type": "WGS84",
+       "x": null,
+       "y": null
+      }
+     },
+     "departure": "2026-11-03T08:12:00+0100"
+    },
+    {
+     "station": {
+      "id": "8500005",
+      "name": "Townsville, Park",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500002",
+      "name": "Townsville, Station",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500007",
+      "name": "Townsville, Hill",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    }
+   ]
+  },
+  {
+   "stop": {
+    "station": {
+     "id": "8500001",
+     "name": "Townsville, Market",
+     "coordinate": {
+      "type": "WGS84",
+      "x": 47.0,
+      "y": 7.0
+     }
+    },
+    "departure": "2026-11-03T08:15:00+0100",
+    "departureTimestamp": 1793690100,
+    "delay": 2,
+    "platform": null,
+    "prognosis": {
+     "platform": null,
+     "departure": "2026-11-03T08:17:00+0100"
+    }
+   },
+   "name": "0007",
+   "category": "T",
+   "number": "7",
+   "operator": "XX",
+   "to": "Townsville, Harbour",
+   "passList": [
+    {
+     "station": {
+      "id": null,
+      "name": null,
+      "coordinate": {
+       "type": "WGS84",
+       "x": null,
+       "y": null
+      }
+     },
+     "departure": "2026-11-03T08:15:00+0100"
+    },
+    {
+     "station": {
+      "id": "8500006",
+      "name": "Townsville, School",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500003",
+      "name": "Townsville, Harbour",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    }
+   ]
+  },
+  {
+   "stop": {
+    "station": {
+     "id": "8500001",
+     "name": "Townsville, Market",
+     "coordinate": {
+      "type": "WGS84",
+      "x": 47.0,
+      "y": 7.0
+     }
+    },
+    "departure": "2026-11-03T08:17:00+0100",
+    "departureTimestamp": 1793690220,
+    "delay": 0,
+    "platform": null,
+    "prognosis": {
+     "platform": null,
+     "departure": "2026-11-03T08:17:00+0100"
+    }
+   },
+   "name": "0003",
+   "category": "B",
+   "number": "3",
+   "operator": "XX",
+   "to": "Townsville, School",
+   "passList": [
+    {
+     "station": {
+      "id": null,
+      "name": null,
+      "coordinate": {
+       "type": "WGS84",
+       "x": null,
+       "y": null
+      }
+     },
+     "departure": "2026-11-03T08:17:00+0100"
+    },
+    {
+     "station": {
+      "id": "8500006",
+      "name": "Townsville, School",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    }
+   ]
+  },
+  {
+   "stop": {
+    "station": {
+     "id": "8500001",
+     "name": "Townsville, Market",
+     "coordinate": {
+      "type": "WGS84",
+      "x": 47.0,
+      "y": 7.0
+     }
+    },
+    "departure": "2026-11-03T08:31:00+0100",
+    "departureTimestamp": 1793691060,
+    "delay": 1,
+    "platform": null,
+    "prognosis": {
+     "platform": null,
+     "departure": "2026-11-03T08:32:00+0100"
+    }
+   },
+   "name": "0007",
+   "category": "T",
+   "number": "7",
+   "operator": "XX",
+   "to": "Townsville, Hill",
+   "passList": [
+    {
+     "station": {
+      "id": null,
+      "name": null,
+      "coordinate": {
+       "type": "WGS84",
+       "x": null,
+       "y": null
+      }
+     },
+     "departure": "2026-11-03T08:31:00+0100"
+    },
+    {
+     "station": {
+      "id": "8500005",
+      "name": "Townsville, Park",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500002",
+      "name": "Townsville, Station",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    },
+    {
+     "station": {
+      "id": "8500007",
+      "name": "Townsville, Hill",
+      "coordinate": {
+       "type": "WGS84",
+       "x": 47.0,
+       "y": 7.0
+      }
+     },
+     "departure": null
+    }
+   ]
+  },
+  {
+   "stop": {
+    "station": {
+     "id": "8500001",
+     "name": "Townsville, Market",
+     "coordinate": {
+      "type": "WGS84",
+      "x": 47.0,
+      "y": 7.0
+     }
+    },
+    "departure": "2026-11-03T08:51:00+0100",
+    "departureTimestamp": 1793692260,
+    "delay": null,
+    "platform": null,
+    "prognosis": {
+     "platform": null,
+     "departure": null
+    }
+   },
+   "name": "00015",
+   "category": "IR",
+   "number": "15",
+   "operator": "XX",
+   "to": "Townsville, Station",
+   "passList": [
+    {
+     "station": {
+      "id": null,
+      "name": null,
+      "coordinate": {
+       "type": "WGS84",
+       "x": null,
+       "y": null
+      }
+     },
+     "departure": "2026-11-03T08:51:00+0100"
+    }
+   ]
+  }
+ ]
+}

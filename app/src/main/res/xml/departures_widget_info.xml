@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Defaults to a compact 4x1 strip. Resize to two rows or more for the detailed layout.
+     updatePeriodMillis is 0: the app never asks the system to wake the phone for the widget.
+     Freshness comes from a non-waking alarm and a WorkManager safety net instead. -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/widget_description"
+    android:initialLayout="@layout/widget_compact"
+    android:previewLayout="@layout/widget_compact"
+    android:minWidth="250dp"
+    android:minHeight="40dp"
+    android:minResizeWidth="180dp"
+    android:minResizeHeight="40dp"
+    android:targetCellWidth="4"
+    android:targetCellHeight="1"
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />
