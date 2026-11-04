@@ -2,6 +2,8 @@
 <!-- Compact two-line layout, the default size (4x1 on a One UI home screen):
      [7] Market → Station · nearby                     ⇄
      07:54 +2  5 min                         08:02  13 min -->
+<!-- Both departures sit on one baseline: each departure group aligns on its time
+     (baselineAlignedChildIndex), otherwise the smaller second time floats to the top. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/background"
     android:layout_width="match_parent"
@@ -99,6 +101,7 @@
 
         <LinearLayout
             android:id="@+id/row1"
+            android:baselineAlignedChildIndex="0"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -146,6 +149,7 @@
 
         <LinearLayout
             android:id="@+id/row2"
+            android:baselineAlignedChildIndex="0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:baselineAligned="true"
