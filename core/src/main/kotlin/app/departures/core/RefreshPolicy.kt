@@ -30,7 +30,12 @@ object RefreshPolicy {
         if (board == null || board.direction != wanted || board.fromStopId != fromStopId) return true
         if (nowEpochMs - board.fetchedAtEpochMs >= STALE_AFTER_MS) return true
         if (nowEpochMs < board.fetchedAtEpochMs) return true // clock moved backwards
-        return board.upcoming(nowEpochMs).size < minUpcoming
+        // Refetch when departures run out, but only if the last fetch returned more than are
+        // left now. A board with only one or two matches at all (a quiet route, or a busy stop
+        // where few departures go your way) would otherwise be refetched on every redraw; it is
+        // refreshed when it goes stale instead.
+        val upcoming = board.upcoming(nowEpochMs).size
+        return upcoming < minOf(minUpcoming, board.departures.size)
     }
 
     /**

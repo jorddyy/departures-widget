@@ -31,13 +31,15 @@ class Stations(
     /**
      * Fetches boards for [stops] that need it. Automatic refreshes follow the same rules as the
      * commute widget: only while the screen is on, never more often than needed.
+     *
+     * @param forceStopId a stop you asked to refresh (by tapping its widget); fetched regardless.
      */
-    suspend fun refresh(stops: Collection<Stop>, userInitiated: Boolean) = withContext(Dispatchers.IO) {
+    suspend fun refresh(stops: Collection<Stop>, forceStopId: String? = null) = withContext(Dispatchers.IO) {
         val now = clock()
-        val automaticAllowed = userInitiated || power?.isInteractive != false
+        val automaticAllowed = power?.isInteractive != false
         for (stop in stops.distinctBy { it.id }) {
             val backingOff = now - store.stationFailureAt(stop.id) < Commute.RETRY_BACKOFF_MS
-            val fetch = userInitiated ||
+            val fetch = stop.id == forceStopId ||
                 (automaticAllowed && !backingOff && RefreshPolicy.shouldFetch(now, board(stop), null, stop.id, MIN_UPCOMING))
             if (!fetch) continue
             try {

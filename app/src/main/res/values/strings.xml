@@ -28,7 +28,7 @@
     <string name="no_connection">No connection</string>
     <string name="no_departures">No more departures listed</string>
     <string name="setup_needed">Tap to choose your Home and Work stops</string>
-    <string name="station_setup_needed">Open the widget settings to choose a stop</string>
+    <string name="station_setup_needed">Tap to choose a stop</string>
 
     <string name="show_direction">Showing departures to %1$s. Tap to show departures to %2$s instead</string>
     <string name="refresh">Refresh</string>
@@ -77,6 +77,8 @@
     <string name="update_install_failed">Android couldn\'t install the update: %1$s</string>
     <string name="update_conflict">This update is signed with a different key than the installed app. Uninstall Departures once, then install the latest version from the GitHub release page. Updates work from the app after that.</string>
     <string name="update_now">Update</string>
+    <string name="update_installing">Confirm the update on Android\'s screen. The app restarts when it\'s done.</string>
+    <string name="update_retry">Show it again</string>
     <string name="update_check">Check for updates</string>
 
     <string name="a11y_departure">Departs %1$s, %2$s, %3$s</string>
