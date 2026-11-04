@@ -12,6 +12,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,6 +25,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
@@ -74,6 +77,7 @@ import app.departures.core.RouteSetup
 import app.departures.core.StopCodec
 import app.departures.core.Stop
 import app.departures.core.Format
+import app.departures.core.LineColors
 import app.departures.R
 import app.departures.data.Commute
 import app.departures.data.LocationSource
@@ -326,6 +330,23 @@ private fun DirectionPicker(snapshot: Snapshot, route: Route, onChoose: (Directi
     }
 }
 
+/** The line number on its official colour, or the theme colour if the line isn't known. */
+@Composable
+private fun LineBadge(d: Departure) {
+    val official = LineColors.of(d.operator, d.line)
+    val background = official?.let { Color(it.background) } ?: MaterialTheme.colorScheme.primary
+    val text = official?.let { Color(it.text) } ?: MaterialTheme.colorScheme.onPrimary
+    Box(
+        Modifier
+            .background(background, RoundedCornerShape(6.dp))
+            .widthIn(min = 36.dp)
+            .padding(horizontal = 6.dp, vertical = 2.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(d.line, color = text, fontWeight = FontWeight.Bold, fontSize = 14.sp, maxLines = 1)
+    }
+}
+
 @Composable
 private fun DepartureRow(context: Context, d: Departure, now: Long) {
     val description = Texts.describe(context, d, now)
@@ -336,6 +357,8 @@ private fun DepartureRow(context: Context, d: Departure, now: Long) {
             .clearAndSetSemantics { contentDescription = description },
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        LineBadge(d)
+        Spacer(Modifier.width(12.dp))
         Column(Modifier.weight(1f)) {
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(Format.clock(d.scheduledEpochMs), fontSize = 24.sp, fontWeight = FontWeight.Bold)

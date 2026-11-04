@@ -50,19 +50,31 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/r1_line"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_bg"
-            android:gravity="center"
-            android:minWidth="30dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:maxLines="1"
-            android:textColor="@color/badge_text"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/r1_line_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/badge_bg" />
+
+            <TextView
+                android:id="@+id/r1_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="30dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/badge_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/r1_dest"
@@ -127,19 +139,31 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/r2_line"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_bg"
-            android:gravity="center"
-            android:minWidth="30dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:maxLines="1"
-            android:textColor="@color/badge_text"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/r2_line_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/badge_bg" />
+
+            <TextView
+                android:id="@+id/r2_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="30dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/badge_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/r2_dest"
@@ -204,19 +228,31 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/r3_line"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_bg"
-            android:gravity="center"
-            android:minWidth="30dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:maxLines="1"
-            android:textColor="@color/badge_text"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/r3_line_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/badge_bg" />
+
+            <TextView
+                android:id="@+id/r3_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="30dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/badge_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/r3_dest"
@@ -281,19 +317,31 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/r4_line"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_bg"
-            android:gravity="center"
-            android:minWidth="30dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:maxLines="1"
-            android:textColor="@color/badge_text"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/r4_line_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/badge_bg" />
+
+            <TextView
+                android:id="@+id/r4_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="30dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/badge_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/r4_dest"
@@ -358,19 +406,31 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/r5_line"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_bg"
-            android:gravity="center"
-            android:minWidth="30dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:maxLines="1"
-            android:textColor="@color/badge_text"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/r5_line_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/badge_bg" />
+
+            <TextView
+                android:id="@+id/r5_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="30dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/badge_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/r5_dest"
@@ -435,19 +495,31 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/r6_line"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_bg"
-            android:gravity="center"
-            android:minWidth="30dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:maxLines="1"
-            android:textColor="@color/badge_text"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/r6_line_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/badge_bg" />
+
+            <TextView
+                android:id="@+id/r6_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="30dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/badge_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/r6_dest"
@@ -512,19 +584,31 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/r7_line"
+        <FrameLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_bg"
-            android:gravity="center"
-            android:minWidth="30dp"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
-            android:maxLines="1"
-            android:textColor="@color/badge_text"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/r7_line_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/badge_bg" />
+
+            <TextView
+                android:id="@+id/r7_line"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:minWidth="30dp"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp"
+                android:textColor="@color/badge_text"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/r7_dest"

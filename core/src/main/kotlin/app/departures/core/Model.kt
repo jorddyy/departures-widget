@@ -48,6 +48,8 @@ data class Departure(
     val delayMinutes: Int?,
     val realtime: Boolean,
     val platform: String? = null,
+    /** Operator code as the API reports it, e.g. "TPG"; used to look up the line colour. */
+    val operator: String? = null,
 )
 
 /**

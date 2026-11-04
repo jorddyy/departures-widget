@@ -17,7 +17,7 @@ object BoardCodec {
             fetchedAt = board.fetchedAtEpochMs,
             from = board.fromStopId,
             departures = board.departures.map {
-                StoredDeparture(it.line, it.destination, it.scheduledEpochMs, it.expectedEpochMs, it.delayMinutes, it.realtime, it.platform)
+                StoredDeparture(it.line, it.destination, it.scheduledEpochMs, it.expectedEpochMs, it.delayMinutes, it.realtime, it.platform, it.operator)
             },
         ),
     )
@@ -30,7 +30,7 @@ object BoardCodec {
             Board(
                 direction = s.direction?.let(Direction::valueOf),
                 departures = s.departures.map {
-                    Departure(it.line, it.destination, it.scheduled, it.expected, it.delay, it.realtime, it.platform)
+                    Departure(it.line, it.destination, it.scheduled, it.expected, it.delay, it.realtime, it.platform, it.operator)
                 },
                 fetchedAtEpochMs = s.fetchedAt,
                 fromStopId = s.from,
@@ -60,6 +60,7 @@ object BoardCodec {
         val delay: Int? = null,
         val realtime: Boolean = false,
         val platform: String? = null,
+        val operator: String? = null,
     )
 }
 

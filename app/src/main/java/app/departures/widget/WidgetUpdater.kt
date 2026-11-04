@@ -14,6 +14,7 @@ import android.widget.RemoteViews
 import app.departures.R
 import app.departures.core.Departure
 import app.departures.core.Format
+import app.departures.core.LineColors
 import app.departures.core.RefreshPolicy
 import app.departures.data.Commute
 import app.departures.data.Snapshot
@@ -131,7 +132,8 @@ object WidgetUpdater {
         val upcoming = s.board?.upcoming(now).orEmpty().take(2)
         val lines = upcoming.map { it.line }.filter { it.isNotBlank() }.distinct().joinToString("/")
         views.setViewVisibility(R.id.badge, if (lines.isEmpty()) View.GONE else View.VISIBLE)
-        views.setTextViewText(R.id.badge, lines)
+        views.setTextViewText(R.id.badge_text, lines)
+        upcoming.firstOrNull()?.let { tintBadge(views, R.id.badge_bg, R.id.badge_text, it) }
 
         bindRow(context, views, upcoming.getOrNull(0), now, R.id.row1, R.id.time1, R.id.delay1, R.id.count1, R.id.min1, minutes)
         bindRow(context, views, upcoming.getOrNull(1), now, R.id.row2, R.id.time2, R.id.delay2, R.id.count2, R.id.min2, minutes)
@@ -147,6 +149,16 @@ object WidgetUpdater {
 
         views.setOnClickPendingIntent(R.id.swap, broadcast(context, DeparturesWidget.ACTION_SWAP, 1))
         return views
+    }
+
+    /**
+     * Colours a line badge with the line's official colours, if known; otherwise the layout's
+     * default badge colours stay.
+     */
+    internal fun tintBadge(views: RemoteViews, background: Int, text: Int, departure: Departure) {
+        val colour = LineColors.of(departure.operator, departure.line) ?: return
+        views.setInt(background, "setColorFilter", colour.background)
+        views.setTextColor(text, colour.text)
     }
 
     /** Fills one departure into the given views; hides [row] when there is none. */

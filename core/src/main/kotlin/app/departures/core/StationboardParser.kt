@@ -81,6 +81,7 @@ object StationboardParser {
             delayMinutes = delay,
             realtime = prognosisMs != null || s.delay != null,
             platform = s.prognosis?.platform ?: s.platform,
+            operator = operator?.trim()?.ifEmpty { null },
         )
     }
 
@@ -102,6 +103,7 @@ object StationboardParser {
         val name: String? = null,
         val category: String? = null,
         val number: String? = null,
+        val operator: String? = null,
         val to: String? = null,
         val passList: List<PassStop> = emptyList(),
     )

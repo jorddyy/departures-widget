@@ -17,18 +17,33 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
+        <!-- Line badge: a shape tinted with the line's colour (ImageView colour filters are
+             allowed in widgets; tinting a background is not), with the number on top. -->
+        <FrameLayout
             android:id="@+id/badge"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/badge_bg"
-            android:importantForAccessibility="no"
-            android:maxLines="1"
-            android:paddingStart="6dp"
-            android:paddingEnd="6dp"
-            android:textColor="@color/badge_text"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/badge_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:importantForAccessibility="no"
+                android:scaleType="fitXY"
+                android:src="@drawable/badge_bg" />
+
+            <TextView
+                android:id="@+id/badge_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:importantForAccessibility="no"
+                android:maxLines="1"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:textColor="@color/badge_text"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
         <TextView
             android:id="@+id/title"
