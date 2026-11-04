@@ -5,28 +5,34 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Read-only by default. Only the release job, which runs for pushes to main, may write.
 permissions:
-  contents: write  # needed only to publish the release from main
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+    outputs:
+      signed: ${{ steps.signing.outputs.signed }}
     steps:
-      - uses: actions/checkout@v4
+      # Third-party actions are pinned to exact commits (the tag they had when pinned).
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@cf277c60eb25467037889841efdb72551f06f6c3 # v4
         with:
           distribution: temurin
           java-version: 17
 
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@ed408507eac070d1f99cc633dbcf757c94c7933a # v4
 
-      # The signing key lives in two repository secrets (see README "Signing"), never in the repo.
+      # The signing key lives in two repository secrets (see README), never in the repo, and is
+      # only handed to builds of main. Other branches and pull requests build with a throwaway key.
       - name: Decode signing key
+        id: signing
         env:
-          KEYSTORE_BASE64: ${{ secrets.SIGNING_KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ secrets.SIGNING_KEYSTORE_PASSWORD }}
+          KEYSTORE_BASE64: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.SIGNING_KEYSTORE_BASE64 || '' }}
+          KEYSTORE_PASSWORD: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && secrets.SIGNING_KEYSTORE_PASSWORD || '' }}
         run: |
           if [ -n "$KEYSTORE_BASE64" ] && [ -n "$KEYSTORE_PASSWORD" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/signing.jks"
@@ -37,8 +43,10 @@ jobs:
               | awk -F, '/PrivateKeyEntry/ { print $1; exit }')
             echo "::add-mask::$alias"   # keep the alias out of public logs
             echo "SIGNING_KEY_ALIAS=$alias" >> "$GITHUB_ENV"
+            echo "signed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "::warning::No signing secrets: APKs use a throwaway key and won't install as updates."
+            echo "Not a main build (or no signing secrets): using a throwaway key, no release."
+            echo "signed=false" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Unit tests (core + app)
@@ -50,40 +58,62 @@ jobs:
       - name: Build APKs
         run: ./gradlew :app:assembleDebug :app:assembleRelease
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Upload APKs
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: departures-apk
           path: |
             app/build/outputs/apk/release/app-release.apk
             app/build/outputs/apk/debug/app-debug.apk
 
-      # Every push to main replaces the "latest" release, so the newest APK is always at
-      # https://github.com/<owner>/<repo>/releases/latest (tap the .apk under Assets).
-      # Only builds signed with the stable key are published, so every release installs as an
-      # update over the previous one. version.json is what the app reads to offer updates.
-      - name: Publish latest release
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main' && env.SIGNING_KEYSTORE_PATH != ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          cp app/build/outputs/apk/release/app-release.apk departures.apk
-          sha=$(sha256sum departures.apk | cut -d' ' -f1)
-          printf '{"versionCode":%d,"versionName":"1.0.%d","commit":"%s","apkSha256":"%s"}\n' \
-            "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_NUMBER" "${GITHUB_SHA::7}" "$sha" > version.json
-          cat version.json
-          gh release delete latest --cleanup-tag --yes || true
-          gh release create latest departures.apk version.json \
-            --target "$GITHUB_SHA" \
-            --title "Departures (build ${{ github.run_number }})" \
-            --notes "Version 1.0.${{ github.run_number }}, built from ${GITHUB_SHA::7}. Install departures.apk on your phone, or tap Update in the app." \
-            --latest
-
       - name: Upload reports
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: reports
           path: |
             **/build/reports/
             **/build/test-results/
+
+  # Publishes the signed APK. Each build gets its own release (build-N), marked "latest", so
+  # https://github.com/<owner>/<repo>/releases/latest always has the newest APK. version.json
+  # (read by the app's updater) points at the APK of that exact release, and the previous
+  # release is kept so a download that started just before a new release still completes.
+  release:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.build.outputs.signed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: departures-apk
+          path: out
+
+      - name: Publish release
+        run: |
+          set -euo pipefail
+          cp out/release/app-release.apk departures.apk
+          tag="build-$GITHUB_RUN_NUMBER"
+          sha=$(sha256sum departures.apk | cut -d' ' -f1)
+          url="https://github.com/$GITHUB_REPOSITORY/releases/download/$tag/departures.apk"
+          printf '{"versionCode":%d,"versionName":"1.0.%d","commit":"%s","apkSha256":"%s","apkUrl":"%s"}\n' \
+            "$GITHUB_RUN_NUMBER" "$GITHUB_RUN_NUMBER" "${GITHUB_SHA::7}" "$sha" "$url" > version.json
+          cat version.json
+          gh release create "$tag" departures.apk version.json \
+            --target "$GITHUB_SHA" \
+            --title "Departures (build $GITHUB_RUN_NUMBER)" \
+            --notes "Version 1.0.$GITHUB_RUN_NUMBER, built from ${GITHUB_SHA::7}. Install departures.apk on your phone, or tap Update in the app." \
+            --latest
+
+      - name: Remove old releases (keep the newest two)
+        run: |
+          gh release delete latest --cleanup-tag --yes 2>/dev/null || true  # the pre-build-N release
+          gh release list --limit 100 --json tagName,createdAt \
+            -q 'sort_by(.createdAt) | reverse | .[2:] | .[].tagName' \
+            | grep '^build-' \
+            | xargs -r -n1 gh release delete --cleanup-tag --yes

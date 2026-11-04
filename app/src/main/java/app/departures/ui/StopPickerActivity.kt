@@ -74,28 +74,44 @@ class StopPickerActivity : ComponentActivity() {
         Stations(applicationContext).setStop(widgetId, stop)
         WidgetUpdater.renderAll(applicationContext)
         RefreshWorker.schedulePeriodic(applicationContext)
-        RefreshWorker.enqueue(applicationContext, userInitiated = true)
+        RefreshWorker.enqueue(applicationContext, userInitiated = true, stopId = stop.id)
         setResult(RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
         finish()
     }
 
     private fun returnStop(stop: Stop) {
-        setResult(RESULT_OK, Intent().putExtra(EXTRA_STOP, StopCodec.encodeStop(stop)))
+        // Echo the role back, so the result is applied to the right stop even if the screen
+        // that asked was recreated in the meantime.
+        val result = Intent()
+            .putExtra(EXTRA_STOP, StopCodec.encodeStop(stop))
+            .putExtra(EXTRA_HOME, intent.getBooleanExtra(EXTRA_HOME, true))
+        setResult(RESULT_OK, result)
         finish()
     }
 
-    /** Opens the picker with a title and returns the chosen stop, or null if cancelled. */
-    class Pick : ActivityResultContract<String, Stop?>() {
-        override fun createIntent(context: Context, input: String): Intent =
-            Intent(context, StopPickerActivity::class.java).putExtra(EXTRA_TITLE, input)
+    /** What to pick: Home ([home] true) or Work, and the screen title. */
+    data class Request(val home: Boolean, val title: String)
 
-        override fun parseResult(resultCode: Int, intent: Intent?): Stop? =
-            if (resultCode == Activity.RESULT_OK) StopCodec.decodeStop(intent?.getStringExtra(EXTRA_STOP)) else null
+    data class Result(val home: Boolean, val stop: Stop)
+
+    /** Opens the picker and returns the chosen stop with its role, or null if cancelled. */
+    class Pick : ActivityResultContract<Request, Result?>() {
+        override fun createIntent(context: Context, input: Request): Intent =
+            Intent(context, StopPickerActivity::class.java)
+                .putExtra(EXTRA_TITLE, input.title)
+                .putExtra(EXTRA_HOME, input.home)
+
+        override fun parseResult(resultCode: Int, intent: Intent?): Result? {
+            if (resultCode != Activity.RESULT_OK || intent == null) return null
+            val stop = StopCodec.decodeStop(intent.getStringExtra(EXTRA_STOP)) ?: return null
+            return Result(intent.getBooleanExtra(EXTRA_HOME, true), stop)
+        }
     }
 
     companion object {
         private const val EXTRA_TITLE = "title"
         private const val EXTRA_STOP = "stop"
+        private const val EXTRA_HOME = "home"
     }
 }
 

@@ -137,6 +137,15 @@ class WidgetUpdaterTest {
         assertEquals(View.GONE, seconds.visibility(R.id.min1))
     }
 
+    @Test
+    fun `redraw timing follows the minute only in minute mode`() {
+        val shown = listOf(dep(4, 0)) // 4 min away: "4 min" turns into "3 min" in a minute
+        val nextRender = now + 4 * min + 30_000
+        assertEquals(now + min, WidgetUpdater.nextTick(now, nextRender, shown, minutes = true))
+        // Seconds countdown: the launcher ticks it, so only redraw when the tram leaves.
+        assertEquals(nextRender, WidgetUpdater.nextTick(now, nextRender, shown, minutes = false))
+    }
+
     // --- Station board ---
 
     private fun station(board: Board?, rows: Int, stop: Stop? = market, offline: Boolean = false): View =
@@ -168,7 +177,7 @@ class WidgetUpdaterTest {
     @Test
     fun `station board without a stop asks for one`() {
         val v = station(null, rows = 4, stop = null)
-        assertEquals("Open the widget settings to choose a stop", v.text(R.id.empty))
+        assertEquals("Tap to choose a stop", v.text(R.id.empty))
         assertEquals(View.GONE, v.visibility(R.id.r1))
     }
 

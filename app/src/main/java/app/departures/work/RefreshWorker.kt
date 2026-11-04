@@ -24,23 +24,29 @@ import java.util.concurrent.TimeUnit
 class RefreshWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
         val userInitiated = inputData.getBoolean(KEY_USER, false)
+        // A tap on a station board refreshes just that stop; everything else follows the
+        // usual "only if needed" rules.
+        val stopId = inputData.getString(KEY_STOP)
         val context = applicationContext
-        if (WidgetUpdater.hasCommuteWidgets(context)) Commute(context).refresh(userInitiated = userInitiated)
-        Stations(context).refresh(StationWidgetUpdater.stops(context), userInitiated)
+        if (WidgetUpdater.hasCommuteWidgets(context)) {
+            Commute(context).refresh(userInitiated = userInitiated && stopId == null)
+        }
+        Stations(context).refresh(StationWidgetUpdater.stops(context), forceStopId = stopId.takeIf { userInitiated })
         WidgetUpdater.renderAll(context)
         return Result.success()
     }
 
     companion object {
         private const val KEY_USER = "user"
+        private const val KEY_STOP = "stop"
         private const val ONE_SHOT = "refresh"
         private const val PERIODIC = "refresh-periodic"
 
         /** Ask for a refresh soon. A user request replaces any pending automatic one. */
-        fun enqueue(context: Context, userInitiated: Boolean) {
+        fun enqueue(context: Context, userInitiated: Boolean, stopId: String? = null) {
             val request = OneTimeWorkRequestBuilder<RefreshWorker>()
                 .setConstraints(Constraints(requiredNetworkType = NetworkType.CONNECTED))
-                .setInputData(workDataOf(KEY_USER to userInitiated))
+                .setInputData(workDataOf(KEY_USER to userInitiated, KEY_STOP to stopId))
                 .build()
             val policy = if (userInitiated) ExistingWorkPolicy.REPLACE else ExistingWorkPolicy.KEEP
             WorkManager.getInstance(context).enqueueUniqueWork(ONE_SHOT, policy, request)

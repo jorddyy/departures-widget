@@ -84,4 +84,15 @@ class RefreshPolicyTest {
         assertFalse(RefreshPolicy.shouldFetch(now, b, null, "S1"))
         assertTrue(RefreshPolicy.shouldFetch(now, b, Direction.TO_WORK, "S1"))
     }
+
+    @Test
+    fun `a board with few matches is not refetched on every redraw`() {
+        // Only two direct departures came back: still two upcoming, fresh, so no refetch.
+        assertFalse(RefreshPolicy.shouldFetch(now, board(4, 30), Direction.TO_WORK, "S1"))
+        // One of them has left: worth a fresh look.
+        assertTrue(RefreshPolicy.shouldFetch(now, board(-3, 30), Direction.TO_WORK, "S1"))
+        // An empty result is only refetched once it goes stale.
+        assertFalse(RefreshPolicy.shouldFetch(now, board(), Direction.TO_WORK, "S1"))
+        assertTrue(RefreshPolicy.shouldFetch(now, board(ageMin = 5), Direction.TO_WORK, "S1"))
+    }
 }

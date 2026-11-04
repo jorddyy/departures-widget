@@ -23,8 +23,8 @@ you're probably going. Compact by default (4×1):
 
 **Station board:** the next departures at any stop you choose, on every line and in every
 direction. You pick the stop when adding the widget, and you can add as many as you like, one
-per stop. It shows 2 to 7 departures depending on its height. Tap it to refresh; to change the
-stop, long-press it → settings (✎).
+per stop. It shows 2 to 7 departures depending on its height. Tap it to refresh that stop;
+to change the stop, long-press it → settings (✎).
 
 Your stops are stored only on your phone. Nothing about them is in this repository.
 
@@ -43,8 +43,8 @@ Your stops are stored only on your phone. Nothing about them is in this reposito
 
 The bottom of the app shows the installed version, e.g. *Version 1.0.12 (build 12, a1b2c3d)*.
 When you open the app, at most every 6 hours, it checks the latest release. If a newer build
-exists it shows **Update**: tap it, and the app downloads the APK, verifies its checksum and
-hands it to Android, which asks you to confirm. The first time, Android asks you to allow
+exists it shows **Update**: tap it, and the app downloads that exact release's APK, verifies
+its checksum and hands it to Android, which asks you to confirm. The first time, Android asks you to allow
 *Install unknown apps* for Departures. **Check for updates** forces a check.
 
 ### Build it yourself
@@ -65,8 +65,9 @@ follows the time of day. To let the widget switch direction without opening the 
 **Allow all the time** on the card that follows (Android 10+). Precise location is never
 requested.
 
-For a calm **whole-minute countdown**, tap **Allow** on the *Countdown in minutes* card and turn
-on *Alarms & reminders*. Without it the widgets show a seconds countdown.
+The widgets count down in **whole minutes**. On Android 13+ this works out of the box; on
+Android 12 the app asks you to allow *Alarms & reminders* (without it you get a seconds
+countdown).
 
 Requires Android 8.0 (API 26) or newer.
 
@@ -97,8 +98,9 @@ lives in two repository secrets, never in the code:
    - `SIGNING_KEYSTORE_BASE64`: the contents of `signing.jks.b64`
    - `SIGNING_KEYSTORE_PASSWORD`: the password you chose
 
-CI reads the key alias from the keystore. It only publishes releases signed with this key;
-without the secrets it still builds and tests, but skips the release. The app checks the
+CI reads the key alias from the keystore. The secrets are only given to builds of `main`, and
+only those are published (one release per build, the newest two kept). Other branches and
+pull requests are built and tested with a throwaway key. The app checks the
 repository it was built in for updates, so the repository must be public.
 
 ## How it works
@@ -121,11 +123,14 @@ The design goal is that the app costs nothing while you aren't looking at it.
 
 - **Whole minutes, redrawn on the minute.** The widgets show `5 min` and redraw at the exact
   moment that becomes `4 min`. They use a non-waking alarm: while the phone sleeps nothing runs,
-  and the alarm fires as soon as the screen comes back on. It needs *Alarms & reminders*.
+  and the alarm fires as soon as the screen comes back on. On Android 13+ the app uses the
+  `USE_EXACT_ALARM` permission, granted at install (fine for a sideloaded app; Google Play
+  limits it to alarm-clock apps). Android 12 needs the user-granted *Alarms & reminders*.
 - **Without that permission** the widgets fall back to a seconds countdown drawn by the
   launcher itself, so the time shown is still never stale.
 - **The network is only used when needed.** Data is refetched when it is older than 5 minutes,
-  for another stop or direction, or running out of departures. Automatic fetches never happen
+  for another stop or direction, or running low on departures (only if the last fetch returned
+  more, so a quiet route isn't refetched on every redraw). Automatic fetches never happen
   while the screen is off, and they back off for a minute after a failure.
 - A 30-minute WorkManager job is a safety net. It follows the same rules.
 - Location comes from the platform `LocationManager`. The app reuses a fix the phone already

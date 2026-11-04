@@ -1,8 +1,10 @@
 package app.departures.widget
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.util.SizeF
 import android.view.View
@@ -13,6 +15,7 @@ import app.departures.core.Format
 import app.departures.core.RefreshPolicy
 import app.departures.core.Stop
 import app.departures.data.Stations
+import app.departures.ui.StopPickerActivity
 
 /** Draws the station-board widgets: the next departures at one stop, every line and direction. */
 object StationWidgetUpdater {
@@ -68,6 +71,15 @@ object StationWidgetUpdater {
         return next
     }
 
+    private fun choosePickerIntent(context: Context, widgetId: Int): PendingIntent = PendingIntent.getActivity(
+        context,
+        1000 + widgetId,
+        Intent(context, StopPickerActivity::class.java)
+            .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK),
+        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+    )
+
     internal fun build(
         context: Context,
         widgetId: Int,
@@ -86,6 +98,8 @@ object StationWidgetUpdater {
             WidgetUpdater.broadcast(context, DeparturesWidget.ACTION_REFRESH, 100 + widgetId, widgetId),
         )
         if (stop == null) {
+            // No stop yet (or it was lost): a tap opens the stop search for this widget.
+            views.setOnClickPendingIntent(android.R.id.background, choosePickerIntent(context, widgetId))
             views.setTextViewText(R.id.title, context.getString(R.string.station_widget_name))
             views.setTextViewText(R.id.subtitle, "")
             ROWS.forEach { views.setViewVisibility(it[0], View.GONE) }

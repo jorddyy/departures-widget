@@ -3,7 +3,6 @@ package app.departures.ui
 import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -52,6 +51,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -70,6 +70,8 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import app.departures.core.Departure
 import app.departures.core.Direction
 import app.departures.core.Route
+import app.departures.core.RouteSetup
+import app.departures.core.StopCodec
 import app.departures.core.Stop
 import app.departures.core.Format
 import app.departures.R
@@ -83,45 +85,16 @@ import kotlinx.coroutines.launch
 
 /** Detail view: more departures, manual direction choice and location settings. */
 class MainActivity : ComponentActivity() {
-    /** A failure reported by Android's package installer during an in-app update. */
-    private val installMessage = mutableStateOf<String?>(null)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         val commute = Commute(applicationContext)
         val location = LocationSource(applicationContext)
         val updater = Updater(applicationContext)
-        handleInstallStatus(intent)
         setContent {
             DeparturesTheme {
-                DetailScreen(commute, location, updater, installMessage.value)
+                DetailScreen(commute, location, updater)
             }
-        }
-    }
-
-    override fun onNewIntent(intent: Intent) {
-        super.onNewIntent(intent)
-        handleInstallStatus(intent)
-    }
-
-    /** Android's installer reports back here: show its confirmation screen, or the error. */
-    private fun handleInstallStatus(intent: Intent?) {
-        if (intent?.action != Updater.ACTION_INSTALL_STATUS) return
-        when (val status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE)) {
-            PackageInstaller.STATUS_PENDING_USER_ACTION -> {
-                @Suppress("DEPRECATION")
-                val confirm = intent.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)
-                if (confirm != null) startActivity(confirm)
-            }
-            PackageInstaller.STATUS_SUCCESS -> installMessage.value = null
-            PackageInstaller.STATUS_FAILURE_ABORTED -> installMessage.value = null // user tapped Cancel
-            PackageInstaller.STATUS_FAILURE_CONFLICT, PackageInstaller.STATUS_FAILURE_INCOMPATIBLE ->
-                installMessage.value = getString(R.string.update_conflict)
-            else -> installMessage.value = getString(
-                R.string.update_install_failed,
-                intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: status.toString(),
-            )
         }
     }
 }
@@ -141,7 +114,7 @@ internal fun DeparturesTheme(content: @Composable () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DetailScreen(commute: Commute, location: LocationSource, updater: Updater, installMessage: String?) {
+private fun DetailScreen(commute: Commute, location: LocationSource, updater: Updater) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var snapshot by remember { mutableStateOf(commute.snapshot()) }
@@ -177,26 +150,28 @@ private fun DetailScreen(commute: Commute, location: LocationSource, updater: Up
     }
 
     // Home and Work: picked by search, stored only on this phone. During first-time setup the
-    // first pick is held here until the second one completes the route.
-    var pickingHome by remember { mutableStateOf(true) }
-    var pendingHome by remember { mutableStateOf<Stop?>(null) }
-    var pendingWork by remember { mutableStateOf<Stop?>(null) }
-    val stopPicker = rememberLauncherForActivityResult(StopPickerActivity.Pick()) { stop ->
-        if (stop == null) return@rememberLauncherForActivityResult
-        if (pickingHome) pendingHome = stop else pendingWork = stop
-        val current = commute.route
-        val home = if (pickingHome) stop else current?.home ?: pendingHome
-        val work = if (!pickingHome) stop else current?.work ?: pendingWork
-        if (home != null && work != null) {
-            commute.setRoute(Route(home, work))
+    // first pick is held here (surviving rotation) until the second one completes the route.
+    var pendingHomeJson by rememberSaveable { mutableStateOf<String?>(null) }
+    var pendingWorkJson by rememberSaveable { mutableStateOf<String?>(null) }
+    val pendingHome = StopCodec.decodeStop(pendingHomeJson)
+    val pendingWork = StopCodec.decodeStop(pendingWorkJson)
+    val stopPicker = rememberLauncherForActivityResult(StopPickerActivity.Pick()) { result ->
+        if (result == null) return@rememberLauncherForActivityResult
+        val before = RouteSetup.State(commute.route, pendingHome, pendingWork)
+        val after = RouteSetup.apply(before, result.home, result.stop)
+        pendingHomeJson = after.pendingHome?.let(StopCodec::encodeStop)
+        pendingWorkJson = after.pendingWork?.let(StopCodec::encodeStop)
+        val newRoute = after.route
+        if (newRoute != null && newRoute != before.route) {
+            commute.setRoute(newRoute)
             snapshot = commute.snapshot()
             WidgetUpdater.renderAll(context)
             refresh(userInitiated = true)
         }
     }
     fun pick(home: Boolean) {
-        pickingHome = home
-        stopPicker.launch(context.getString(if (home) R.string.choose_home else R.string.choose_work))
+        val title = context.getString(if (home) R.string.choose_home else R.string.choose_work)
+        stopPicker.launch(StopPickerActivity.Request(home, title))
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
@@ -319,7 +294,7 @@ private fun DetailScreen(commute: Commute, location: LocationSource, updater: Up
                     permissionLauncher.launch(permission)
                 }
                 Spacer(Modifier.padding(6.dp))
-                UpdateSection(updater, resumeCount = permissionsVersion, installMessage = installMessage)
+                UpdateSection(updater, resumeCount = permissionsVersion)
                 Text(
                     stringResource(R.string.privacy_note),
                     Modifier.padding(top = 16.dp),

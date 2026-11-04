@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import app.departures.core.UpdateInfo
 import app.departures.BuildConfig
 import app.departures.R
+import app.departures.data.InstallOutcome
 import app.departures.data.Updater
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -39,6 +40,8 @@ private sealed interface UpdateUi {
     data object UpToDate : UpdateUi
     data class Available(val info: UpdateInfo) : UpdateUi
     data class Downloading(val info: UpdateInfo) : UpdateUi
+    /** Handed to Android's installer; waiting for you to confirm on its screen. */
+    data class Installing(val info: UpdateInfo) : UpdateUi
     data class NeedsPermission(val info: UpdateInfo) : UpdateUi
     data object Offline : UpdateUi
     data class Failed(val message: String) : UpdateUi
@@ -48,12 +51,11 @@ private sealed interface UpdateUi {
  * Version line plus update controls at the bottom of the detail screen. Checks automatically
  * when shown (rate-limited by [Updater]); the button forces a fresh check.
  *
- * @param resumeCount changes every time the app comes to the foreground, so a permission the user
- *   just granted in Settings is picked up.
- * @param installMessage a failure reported by Android's installer, if any.
+ * @param resumeCount changes every time the app comes to the foreground, so a permission just
+ *   granted in Settings, or the installer's answer, is picked up.
  */
 @Composable
-fun UpdateSection(updater: Updater, resumeCount: Int, installMessage: String?) {
+fun UpdateSection(updater: Updater, resumeCount: Int) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var state by remember { mutableStateOf<UpdateUi>(UpdateUi.Idle) }
@@ -81,7 +83,7 @@ fun UpdateSection(updater: Updater, resumeCount: Int, installMessage: String?) {
         scope.launch {
             state = try {
                 updater.downloadAndInstall(info)
-                UpdateUi.Available(info) // stays offered until Android finishes and restarts the app
+                UpdateUi.Installing(info) // Android restarts the app when the install succeeds
             } catch (e: IOException) {
                 UpdateUi.Failed(e.message ?: context.getString(R.string.update_failed))
             }
@@ -90,6 +92,13 @@ fun UpdateSection(updater: Updater, resumeCount: Int, installMessage: String?) {
 
     LaunchedEffect(resumeCount) {
         val current = state
+        // What Android's installer reported while we were away (cancelled, failed, …).
+        when (val outcome = updater.takeOutcome()) {
+            null -> Unit
+            InstallOutcome.Cancelled -> if (current is UpdateUi.Installing) state = UpdateUi.Available(current.info)
+            InstallOutcome.Conflict -> state = UpdateUi.Failed(context.getString(R.string.update_conflict))
+            is InstallOutcome.Failed -> state = UpdateUi.Failed(context.getString(R.string.update_install_failed, outcome.message))
+        }
         when {
             // Back from "Install unknown apps": continue if it's now allowed.
             current is UpdateUi.NeedsPermission && updater.canInstall() -> install(current.info)
@@ -106,11 +115,12 @@ fun UpdateSection(updater: Updater, resumeCount: Int, installMessage: String?) {
                 stringResource(R.string.version_line, updater.installedVersionName, updater.installedVersionCode, BuildConfig.GIT_SHA),
                 style = MaterialTheme.typography.titleSmall,
             )
-            val status = installMessage ?: when (val s = state) {
+            val status = when (val s = state) {
                 UpdateUi.Idle, UpdateUi.Checking -> stringResource(R.string.update_checking)
                 UpdateUi.UpToDate -> stringResource(R.string.update_up_to_date)
                 is UpdateUi.Available -> stringResource(R.string.update_available, s.info.versionName, s.info.versionCode)
                 is UpdateUi.Downloading -> stringResource(R.string.update_downloading, s.info.versionName)
+                is UpdateUi.Installing -> stringResource(R.string.update_installing)
                 is UpdateUi.NeedsPermission -> stringResource(R.string.update_needs_permission)
                 UpdateUi.Offline -> stringResource(R.string.update_offline)
                 is UpdateUi.Failed -> s.message
@@ -124,9 +134,13 @@ fun UpdateSection(updater: Updater, resumeCount: Int, installMessage: String?) {
                     is UpdateUi.NeedsPermission -> FilledTonalButton(onClick = { install(s.info) }) {
                         Text(stringResource(R.string.update_now))
                     }
+                    // In case Android's confirmation screen never showed up.
+                    is UpdateUi.Installing -> TextButton(onClick = { install(s.info) }) {
+                        Text(stringResource(R.string.update_retry))
+                    }
                     else -> Unit
                 }
-                if (state !is UpdateUi.Checking && state !is UpdateUi.Downloading) {
+                if (state !is UpdateUi.Checking && state !is UpdateUi.Downloading && state !is UpdateUi.Installing) {
                     TextButton(onClick = { check(force = true) }) { Text(stringResource(R.string.update_check)) }
                 }
             }
