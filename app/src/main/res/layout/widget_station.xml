@@ -111,30 +111,35 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
-             countdown in straight columns whatever the destination or delay. -->
-        <TextView
-            android:id="@+id/r1_time"
+        <!-- Time with its delay right after it ("21:07 +1"), as one column of fixed minimum
+             width, so the countdown and platform columns never move. Widths are in sp so they
+             grow with the system font size. -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="end"
-            android:minWidth="38dp"
-            android:textColor="@color/widget_text_secondary"
-            android:textSize="13sp" />
+            android:baselineAlignedChildIndex="0"
+            android:minWidth="60sp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/r1_delay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="start"
-            android:minWidth="22dp"
-            android:textColor="@color/widget_late"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/r1_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/r1_delay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_late"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Chronometer
             android:id="@+id/r1_count"
@@ -142,7 +147,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -153,7 +158,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -230,30 +235,35 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
-             countdown in straight columns whatever the destination or delay. -->
-        <TextView
-            android:id="@+id/r2_time"
+        <!-- Time with its delay right after it ("21:07 +1"), as one column of fixed minimum
+             width, so the countdown and platform columns never move. Widths are in sp so they
+             grow with the system font size. -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="end"
-            android:minWidth="38dp"
-            android:textColor="@color/widget_text_secondary"
-            android:textSize="13sp" />
+            android:baselineAlignedChildIndex="0"
+            android:minWidth="60sp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/r2_delay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="start"
-            android:minWidth="22dp"
-            android:textColor="@color/widget_late"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/r2_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/r2_delay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_late"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Chronometer
             android:id="@+id/r2_count"
@@ -261,7 +271,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -272,7 +282,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -349,30 +359,35 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
-             countdown in straight columns whatever the destination or delay. -->
-        <TextView
-            android:id="@+id/r3_time"
+        <!-- Time with its delay right after it ("21:07 +1"), as one column of fixed minimum
+             width, so the countdown and platform columns never move. Widths are in sp so they
+             grow with the system font size. -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="end"
-            android:minWidth="38dp"
-            android:textColor="@color/widget_text_secondary"
-            android:textSize="13sp" />
+            android:baselineAlignedChildIndex="0"
+            android:minWidth="60sp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/r3_delay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="start"
-            android:minWidth="22dp"
-            android:textColor="@color/widget_late"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/r3_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/r3_delay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_late"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Chronometer
             android:id="@+id/r3_count"
@@ -380,7 +395,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -391,7 +406,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -468,30 +483,35 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
-             countdown in straight columns whatever the destination or delay. -->
-        <TextView
-            android:id="@+id/r4_time"
+        <!-- Time with its delay right after it ("21:07 +1"), as one column of fixed minimum
+             width, so the countdown and platform columns never move. Widths are in sp so they
+             grow with the system font size. -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="end"
-            android:minWidth="38dp"
-            android:textColor="@color/widget_text_secondary"
-            android:textSize="13sp" />
+            android:baselineAlignedChildIndex="0"
+            android:minWidth="60sp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/r4_delay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="start"
-            android:minWidth="22dp"
-            android:textColor="@color/widget_late"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/r4_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/r4_delay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_late"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Chronometer
             android:id="@+id/r4_count"
@@ -499,7 +519,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -510,7 +530,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -587,30 +607,35 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
-             countdown in straight columns whatever the destination or delay. -->
-        <TextView
-            android:id="@+id/r5_time"
+        <!-- Time with its delay right after it ("21:07 +1"), as one column of fixed minimum
+             width, so the countdown and platform columns never move. Widths are in sp so they
+             grow with the system font size. -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="end"
-            android:minWidth="38dp"
-            android:textColor="@color/widget_text_secondary"
-            android:textSize="13sp" />
+            android:baselineAlignedChildIndex="0"
+            android:minWidth="60sp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/r5_delay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="start"
-            android:minWidth="22dp"
-            android:textColor="@color/widget_late"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/r5_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/r5_delay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_late"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Chronometer
             android:id="@+id/r5_count"
@@ -618,7 +643,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -629,7 +654,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -706,30 +731,35 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
-             countdown in straight columns whatever the destination or delay. -->
-        <TextView
-            android:id="@+id/r6_time"
+        <!-- Time with its delay right after it ("21:07 +1"), as one column of fixed minimum
+             width, so the countdown and platform columns never move. Widths are in sp so they
+             grow with the system font size. -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="end"
-            android:minWidth="38dp"
-            android:textColor="@color/widget_text_secondary"
-            android:textSize="13sp" />
+            android:baselineAlignedChildIndex="0"
+            android:minWidth="60sp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/r6_delay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="start"
-            android:minWidth="22dp"
-            android:textColor="@color/widget_late"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/r6_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/r6_delay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_late"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Chronometer
             android:id="@+id/r6_count"
@@ -737,7 +767,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -748,7 +778,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -825,30 +855,35 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
-             countdown in straight columns whatever the destination or delay. -->
-        <TextView
-            android:id="@+id/r7_time"
+        <!-- Time with its delay right after it ("21:07 +1"), as one column of fixed minimum
+             width, so the countdown and platform columns never move. Widths are in sp so they
+             grow with the system font size. -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="end"
-            android:minWidth="38dp"
-            android:textColor="@color/widget_text_secondary"
-            android:textSize="13sp" />
+            android:baselineAlignedChildIndex="0"
+            android:minWidth="60sp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/r7_delay"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            android:fontFeatureSettings="tnum"
-            android:gravity="start"
-            android:minWidth="22dp"
-            android:textColor="@color/widget_late"
-            android:textSize="12sp"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/r7_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_text_secondary"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/r7_delay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:fontFeatureSettings="tnum"
+                android:textColor="@color/widget_late"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <Chronometer
             android:id="@+id/r7_count"
@@ -856,7 +891,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -867,7 +902,7 @@
             android:layout_height="wrap_content"
             android:fontFeatureSettings="tnum"
             android:gravity="end"
-            android:minWidth="52dp"
+            android:minWidth="62sp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
