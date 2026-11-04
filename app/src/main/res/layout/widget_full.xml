@@ -18,16 +18,22 @@
         android:orientation="horizontal">
 
         <!-- Line badge: a shape tinted with the line's colour (ImageView colour filters are
-             allowed in widgets; tinting a background is not), with the number on top. -->
-        <FrameLayout
+             allowed in widgets; tinting a background is not), with the number on top. The shape
+             is pinned to the number's edges: a match_parent child of a wrap_content FrameLayout
+             would measure to nothing. -->
+        <RelativeLayout
             android:id="@+id/badge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/badge_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/badge_text"
+                android:layout_alignEnd="@+id/badge_text"
+                android:layout_alignStart="@+id/badge_text"
+                android:layout_alignTop="@+id/badge_text"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/badge_bg" />
@@ -37,13 +43,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
+                android:paddingTop="1dp"
+                android:paddingBottom="1dp"
                 android:maxLines="1"
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp"
                 android:textColor="@color/badge_text"
                 android:textSize="13sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/title"

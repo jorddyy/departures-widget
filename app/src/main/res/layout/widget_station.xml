@@ -50,14 +50,18 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/r1_line_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/r1_line"
+                android:layout_alignEnd="@+id/r1_line"
+                android:layout_alignStart="@+id/r1_line"
+                android:layout_alignTop="@+id/r1_line"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/badge_bg" />
@@ -70,11 +74,13 @@
                 android:maxLines="1"
                 android:minWidth="30dp"
                 android:paddingStart="4dp"
+                android:paddingTop="1dp"
                 android:paddingEnd="4dp"
+                android:paddingBottom="1dp"
                 android:textColor="@color/badge_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/r1_dest"
@@ -139,14 +145,18 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/r2_line_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/r2_line"
+                android:layout_alignEnd="@+id/r2_line"
+                android:layout_alignStart="@+id/r2_line"
+                android:layout_alignTop="@+id/r2_line"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/badge_bg" />
@@ -159,11 +169,13 @@
                 android:maxLines="1"
                 android:minWidth="30dp"
                 android:paddingStart="4dp"
+                android:paddingTop="1dp"
                 android:paddingEnd="4dp"
+                android:paddingBottom="1dp"
                 android:textColor="@color/badge_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/r2_dest"
@@ -228,14 +240,18 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/r3_line_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/r3_line"
+                android:layout_alignEnd="@+id/r3_line"
+                android:layout_alignStart="@+id/r3_line"
+                android:layout_alignTop="@+id/r3_line"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/badge_bg" />
@@ -248,11 +264,13 @@
                 android:maxLines="1"
                 android:minWidth="30dp"
                 android:paddingStart="4dp"
+                android:paddingTop="1dp"
                 android:paddingEnd="4dp"
+                android:paddingBottom="1dp"
                 android:textColor="@color/badge_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/r3_dest"
@@ -317,14 +335,18 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/r4_line_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/r4_line"
+                android:layout_alignEnd="@+id/r4_line"
+                android:layout_alignStart="@+id/r4_line"
+                android:layout_alignTop="@+id/r4_line"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/badge_bg" />
@@ -337,11 +359,13 @@
                 android:maxLines="1"
                 android:minWidth="30dp"
                 android:paddingStart="4dp"
+                android:paddingTop="1dp"
                 android:paddingEnd="4dp"
+                android:paddingBottom="1dp"
                 android:textColor="@color/badge_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/r4_dest"
@@ -406,14 +430,18 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/r5_line_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/r5_line"
+                android:layout_alignEnd="@+id/r5_line"
+                android:layout_alignStart="@+id/r5_line"
+                android:layout_alignTop="@+id/r5_line"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/badge_bg" />
@@ -426,11 +454,13 @@
                 android:maxLines="1"
                 android:minWidth="30dp"
                 android:paddingStart="4dp"
+                android:paddingTop="1dp"
                 android:paddingEnd="4dp"
+                android:paddingBottom="1dp"
                 android:textColor="@color/badge_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/r5_dest"
@@ -495,14 +525,18 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/r6_line_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/r6_line"
+                android:layout_alignEnd="@+id/r6_line"
+                android:layout_alignStart="@+id/r6_line"
+                android:layout_alignTop="@+id/r6_line"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/badge_bg" />
@@ -515,11 +549,13 @@
                 android:maxLines="1"
                 android:minWidth="30dp"
                 android:paddingStart="4dp"
+                android:paddingTop="1dp"
                 android:paddingEnd="4dp"
+                android:paddingBottom="1dp"
                 android:textColor="@color/badge_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/r6_dest"
@@ -584,14 +620,18 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/r7_line_bg"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/r7_line"
+                android:layout_alignEnd="@+id/r7_line"
+                android:layout_alignStart="@+id/r7_line"
+                android:layout_alignTop="@+id/r7_line"
                 android:importantForAccessibility="no"
                 android:scaleType="fitXY"
                 android:src="@drawable/badge_bg" />
@@ -604,11 +644,13 @@
                 android:maxLines="1"
                 android:minWidth="30dp"
                 android:paddingStart="4dp"
+                android:paddingTop="1dp"
                 android:paddingEnd="4dp"
+                android:paddingBottom="1dp"
                 android:textColor="@color/badge_text"
                 android:textSize="12sp"
                 android:textStyle="bold" />
-        </FrameLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/r7_dest"
