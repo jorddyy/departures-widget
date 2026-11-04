@@ -93,12 +93,34 @@
             android:textColor="@color/widget_text"
             android:textSize="14sp" />
 
+        <!-- Platform column: shown for every row when any departure has a platform (empty
+             boxes are invisible, keeping the column aligned), gone otherwise. -->
+        <TextView
+            android:id="@+id/r1_platform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/platform_bg"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="20dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:textColor="@color/widget_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
+             countdown in straight columns whatever the destination or delay. -->
         <TextView
             android:id="@+id/r1_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
+            android:gravity="end"
+            android:minWidth="38dp"
             android:textColor="@color/widget_text_secondary"
             android:textSize="13sp" />
 
@@ -106,7 +128,10 @@
             android:id="@+id/r1_delay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="2dp"
+            android:fontFeatureSettings="tnum"
+            android:gravity="start"
+            android:minWidth="22dp"
             android:textColor="@color/widget_late"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -115,10 +140,9 @@
             android:id="@+id/r1_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -127,15 +151,15 @@
             android:id="@+id/r1_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/r2"
         android:layout_width="match_parent"
@@ -188,12 +212,34 @@
             android:textColor="@color/widget_text"
             android:textSize="14sp" />
 
+        <!-- Platform column: shown for every row when any departure has a platform (empty
+             boxes are invisible, keeping the column aligned), gone otherwise. -->
+        <TextView
+            android:id="@+id/r2_platform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/platform_bg"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="20dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:textColor="@color/widget_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
+             countdown in straight columns whatever the destination or delay. -->
         <TextView
             android:id="@+id/r2_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
+            android:gravity="end"
+            android:minWidth="38dp"
             android:textColor="@color/widget_text_secondary"
             android:textSize="13sp" />
 
@@ -201,7 +247,10 @@
             android:id="@+id/r2_delay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="2dp"
+            android:fontFeatureSettings="tnum"
+            android:gravity="start"
+            android:minWidth="22dp"
             android:textColor="@color/widget_late"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -210,10 +259,9 @@
             android:id="@+id/r2_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -222,15 +270,15 @@
             android:id="@+id/r2_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/r3"
         android:layout_width="match_parent"
@@ -283,12 +331,34 @@
             android:textColor="@color/widget_text"
             android:textSize="14sp" />
 
+        <!-- Platform column: shown for every row when any departure has a platform (empty
+             boxes are invisible, keeping the column aligned), gone otherwise. -->
+        <TextView
+            android:id="@+id/r3_platform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/platform_bg"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="20dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:textColor="@color/widget_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
+             countdown in straight columns whatever the destination or delay. -->
         <TextView
             android:id="@+id/r3_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
+            android:gravity="end"
+            android:minWidth="38dp"
             android:textColor="@color/widget_text_secondary"
             android:textSize="13sp" />
 
@@ -296,7 +366,10 @@
             android:id="@+id/r3_delay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="2dp"
+            android:fontFeatureSettings="tnum"
+            android:gravity="start"
+            android:minWidth="22dp"
             android:textColor="@color/widget_late"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -305,10 +378,9 @@
             android:id="@+id/r3_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -317,15 +389,15 @@
             android:id="@+id/r3_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/r4"
         android:layout_width="match_parent"
@@ -378,12 +450,34 @@
             android:textColor="@color/widget_text"
             android:textSize="14sp" />
 
+        <!-- Platform column: shown for every row when any departure has a platform (empty
+             boxes are invisible, keeping the column aligned), gone otherwise. -->
+        <TextView
+            android:id="@+id/r4_platform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/platform_bg"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="20dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:textColor="@color/widget_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
+             countdown in straight columns whatever the destination or delay. -->
         <TextView
             android:id="@+id/r4_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
+            android:gravity="end"
+            android:minWidth="38dp"
             android:textColor="@color/widget_text_secondary"
             android:textSize="13sp" />
 
@@ -391,7 +485,10 @@
             android:id="@+id/r4_delay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="2dp"
+            android:fontFeatureSettings="tnum"
+            android:gravity="start"
+            android:minWidth="22dp"
             android:textColor="@color/widget_late"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -400,10 +497,9 @@
             android:id="@+id/r4_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -412,15 +508,15 @@
             android:id="@+id/r4_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/r5"
         android:layout_width="match_parent"
@@ -473,12 +569,34 @@
             android:textColor="@color/widget_text"
             android:textSize="14sp" />
 
+        <!-- Platform column: shown for every row when any departure has a platform (empty
+             boxes are invisible, keeping the column aligned), gone otherwise. -->
+        <TextView
+            android:id="@+id/r5_platform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/platform_bg"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="20dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:textColor="@color/widget_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
+             countdown in straight columns whatever the destination or delay. -->
         <TextView
             android:id="@+id/r5_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
+            android:gravity="end"
+            android:minWidth="38dp"
             android:textColor="@color/widget_text_secondary"
             android:textSize="13sp" />
 
@@ -486,7 +604,10 @@
             android:id="@+id/r5_delay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="2dp"
+            android:fontFeatureSettings="tnum"
+            android:gravity="start"
+            android:minWidth="22dp"
             android:textColor="@color/widget_late"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -495,10 +616,9 @@
             android:id="@+id/r5_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -507,15 +627,15 @@
             android:id="@+id/r5_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/r6"
         android:layout_width="match_parent"
@@ -568,12 +688,34 @@
             android:textColor="@color/widget_text"
             android:textSize="14sp" />
 
+        <!-- Platform column: shown for every row when any departure has a platform (empty
+             boxes are invisible, keeping the column aligned), gone otherwise. -->
+        <TextView
+            android:id="@+id/r6_platform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/platform_bg"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="20dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:textColor="@color/widget_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
+             countdown in straight columns whatever the destination or delay. -->
         <TextView
             android:id="@+id/r6_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
+            android:gravity="end"
+            android:minWidth="38dp"
             android:textColor="@color/widget_text_secondary"
             android:textSize="13sp" />
 
@@ -581,7 +723,10 @@
             android:id="@+id/r6_delay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="2dp"
+            android:fontFeatureSettings="tnum"
+            android:gravity="start"
+            android:minWidth="22dp"
             android:textColor="@color/widget_late"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -590,10 +735,9 @@
             android:id="@+id/r6_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -602,15 +746,15 @@
             android:id="@+id/r6_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
             android:visibility="gone" />
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/r7"
         android:layout_width="match_parent"
@@ -663,12 +807,34 @@
             android:textColor="@color/widget_text"
             android:textSize="14sp" />
 
+        <!-- Platform column: shown for every row when any departure has a platform (empty
+             boxes are invisible, keeping the column aligned), gone otherwise. -->
+        <TextView
+            android:id="@+id/r7_platform"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/platform_bg"
+            android:gravity="center"
+            android:maxLines="1"
+            android:minWidth="20dp"
+            android:paddingStart="3dp"
+            android:paddingEnd="3dp"
+            android:textColor="@color/widget_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <!-- Fixed minimum widths (in dp, growing with large fonts) keep time, delay and
+             countdown in straight columns whatever the destination or delay. -->
         <TextView
             android:id="@+id/r7_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
+            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
+            android:gravity="end"
+            android:minWidth="38dp"
             android:textColor="@color/widget_text_secondary"
             android:textSize="13sp" />
 
@@ -676,7 +842,10 @@
             android:id="@+id/r7_delay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="3dp"
+            android:layout_marginStart="2dp"
+            android:fontFeatureSettings="tnum"
+            android:gravity="start"
+            android:minWidth="22dp"
             android:textColor="@color/widget_late"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -685,10 +854,9 @@
             android:id="@+id/r7_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -697,10 +865,9 @@
             android:id="@+id/r7_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:fontFeatureSettings="tnum"
-            android:minWidth="44dp"
             android:gravity="end"
+            android:minWidth="52dp"
             android:textColor="@color/widget_text"
             android:textSize="14sp"
             android:textStyle="bold"
