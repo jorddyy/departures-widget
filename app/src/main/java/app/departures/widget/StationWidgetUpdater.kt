@@ -184,7 +184,7 @@ object StationWidgetUpdater {
     ): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_station_list)
         bindHeader(context, views, widgetId, stop, board, offline, refreshing)
-        val upcoming = if (stop == null) emptyList() else board?.upcoming(now).orEmpty().take(LIST_MAX_ROWS)
+        val upcoming = listDepartures(stop, board, now)
         val showPlatform = upcoming.any { !it.platform.isNullOrBlank() }
         val items = RemoteViews.RemoteCollectionItems.Builder().setHasStableIds(true).setViewTypeCount(1)
         if (stop != null) {
@@ -213,6 +213,10 @@ object StationWidgetUpdater {
         views.setTextViewText(R.id.empty, empty)
         return views
     }
+
+    /** The departures the scrollable board lists: upcoming ones, at most [LIST_MAX_ROWS]. */
+    internal fun listDepartures(stop: Stop?, board: Board?, now: Long): List<Departure> =
+        if (stop == null) emptyList() else board?.upcoming(now).orEmpty().take(LIST_MAX_ROWS)
 
     /** Same departure → same id across redraws, so the list keeps its scroll position. */
     private fun stableId(d: Departure): Long =

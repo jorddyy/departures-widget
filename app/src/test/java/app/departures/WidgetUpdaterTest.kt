@@ -306,7 +306,13 @@ class WidgetUpdaterTest {
         ).apply(context, FrameLayout(context))
         assertEquals(View.VISIBLE, v.visibility(R.id.list))
         assertEquals(View.GONE, v.visibility(R.id.empty))
-        assertEquals(30, v.findViewById<android.widget.ListView>(R.id.list).adapter.count)
+        // Robolectric doesn't attach collection items to the ListView, so check what goes in.
+        assertEquals(30, StationWidgetUpdater.listDepartures(market, Board(null, many, now, market.id), now).size)
+        val tooMany = (1..60).map { Departure("7", "Townsville, Hill", now + it * min, now + it * min, 0, true) }
+        assertEquals(
+            StationWidgetUpdater.LIST_MAX_ROWS,
+            StationWidgetUpdater.listDepartures(market, Board(null, tooMany, now, market.id), now).size,
+        )
 
         val none = StationWidgetUpdater.buildList(context, 1, null, null, offline = false, refreshing = false, now = now, minutes = true)
             .apply(context, FrameLayout(context))
