@@ -56,7 +56,7 @@ class Stations(
     fun setStop(widgetId: Int, stop: Stop?) = store.setStationStop(widgetId, stop)
 
     private companion object {
-        /** The tallest station board shows seven rows. */
-        const val MIN_UPCOMING = 7
+        /** Refetch when the scrollable board runs low (the list shows up to 40). */
+        const val MIN_UPCOMING = 15
     }
 }

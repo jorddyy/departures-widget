@@ -23,8 +23,9 @@ you're probably going. Compact by default (4×1):
 
 **Station board:** the next departures at any stop you choose, on every line and in every
 direction. You pick the stop when adding the widget, and you can add as many as you like, one
-per stop. It shows 2 to 7 departures depending on its height, with the platform where the
-timetable has one ("Pl. 3"). Tap it to refresh that stop;
+per stop. On Android 12+ the board scrolls through the next ~40 departures (30–60 minutes at a
+busy stop); on older Android it shows 2 to 7 rows depending on its height. Platforms appear
+in their own column where the timetable has one. Tap it to refresh that stop;
 to change the stop, long-press it → settings (✎).
 
 Your stops are stored only on your phone. Nothing about them is in this repository.

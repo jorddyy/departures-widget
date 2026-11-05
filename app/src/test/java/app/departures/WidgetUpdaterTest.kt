@@ -282,6 +282,44 @@ class WidgetUpdaterTest {
         assertEquals(left(R.id.r1_min), left(R.id.r2_min))
     }
 
+    // --- Scrollable station board (Android 12+) ---
+
+    @Test
+    fun `list rows show line, destination, platform and countdown`() {
+        val d = Departure("68", "Elsewhere, Gare", now + 3 * min, now + 4 * min, 1, true, platform = "C", operator = "TPG")
+        val v = StationWidgetUpdater.listRow(context, d, "Townsville, Market", now, minutes = true, showPlatform = true)
+            .apply(context, FrameLayout(context))
+        assertEquals("68", v.text(R.id.row_line))
+        assertEquals("Elsewhere, Gare", v.text(R.id.row_dest))
+        assertEquals("C", v.text(R.id.row_platform))
+        assertEquals("07:53", v.text(R.id.row_time))
+        assertEquals("+1", v.text(R.id.row_delay))
+        assertEquals("4 min", v.text(R.id.row_min))
+        assertEquals(View.VISIBLE, v.visibility(R.id.row))
+    }
+
+    @Test
+    fun `scrollable board lists every fetched departure and handles empty states`() {
+        val many = (1..30).map { Departure("7", "Townsville, Hill", now + it * min, now + it * min, 0, true) }
+        val v = StationWidgetUpdater.buildList(
+            context, 1, market, Board(null, many, now, market.id), offline = false, refreshing = false, now = now, minutes = true,
+        ).apply(context, FrameLayout(context))
+        assertEquals(View.VISIBLE, v.visibility(R.id.list))
+        assertEquals(View.GONE, v.visibility(R.id.empty))
+        // Robolectric doesn't attach collection items to the ListView, so check what goes in.
+        assertEquals(30, StationWidgetUpdater.listDepartures(market, Board(null, many, now, market.id), now).size)
+        val tooMany = (1..60).map { Departure("7", "Townsville, Hill", now + it * min, now + it * min, 0, true) }
+        assertEquals(
+            StationWidgetUpdater.LIST_MAX_ROWS,
+            StationWidgetUpdater.listDepartures(market, Board(null, tooMany, now, market.id), now).size,
+        )
+
+        val none = StationWidgetUpdater.buildList(context, 1, null, null, offline = false, refreshing = false, now = now, minutes = true)
+            .apply(context, FrameLayout(context))
+        assertEquals("Tap to choose a stop", none.text(R.id.empty))
+        assertEquals(View.GONE, none.visibility(R.id.list))
+    }
+
     // --- Station board ---
 
     private fun station(board: Board?, rows: Int, stop: Stop? = market, offline: Boolean = false): View =
