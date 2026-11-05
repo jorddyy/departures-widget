@@ -74,8 +74,8 @@ class TimetableClient(
         /** ...but fetch at most this many pages per refresh. */
         const val MAX_PAGES = 3
 
-        /** The station board shows every departure, so fewer rows cover enough time. */
-        const val BOARD_LIMIT = 15
+        /** The station board scrolls: enough rows for 30-60 minutes at a busy stop. */
+        const val BOARD_LIMIT = 40
         private const val TIMEOUT_MS = 10_000
 
         private val json = Json { ignoreUnknownKeys = true; coerceInputValues = true }

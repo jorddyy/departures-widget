@@ -6,11 +6,11 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import android.util.SizeF
 import android.view.View
 import android.widget.RemoteViews
 import app.departures.R
 import app.departures.core.Board
+import app.departures.core.Departure
 import app.departures.core.Format
 import app.departures.core.LineColors
 import app.departures.core.RefreshPolicy
@@ -40,6 +40,12 @@ object StationWidgetUpdater {
      */
     private val SIZES = listOf(2 to 40f, 3 to 123f, 4 to 149f, 5 to 175f, 6 to 201f, 7 to 227f)
 
+    /** Countdowns in this many top rows drive the minute redraw (the rest scroll into view later). */
+    private const val LIST_TICK_ROWS = 12
+
+    /** At most this many departures in the scrollable list. */
+    internal const val LIST_MAX_ROWS = 40
+
     fun ids(context: Context): IntArray =
         AppWidgetManager.getInstance(context).getAppWidgetIds(ComponentName(context, StationWidget::class.java))
 
@@ -63,18 +69,16 @@ object StationWidgetUpdater {
             val offline = stop != null && stations.isOffline(stop)
             val refreshing = stop != null && stop.id == refreshingStopId
             val views = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                RemoteViews(
-                    SIZES.associate { (rows, height) ->
-                        SizeF(180f, height) to build(context, id, stop, board, offline, refreshing, now, rows, minutes)
-                    },
-                )
+                // Android 12+: one layout with a scrollable list of every fetched departure.
+                buildList(context, id, stop, board, offline, refreshing, now, minutes)
             } else {
                 val height = manager.getAppWidgetOptions(id).getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
                 val rows = SIZES.lastOrNull { it.second <= height }?.first ?: SIZES.first().first
                 build(context, id, stop, board, offline, refreshing, now, rows, minutes)
             }
             manager.updateAppWidget(id, views)
-            val shown = board?.upcoming(now).orEmpty().take(SIZES.last().first)
+            // Redraw when a countdown near the top of the board changes.
+            val shown = board?.upcoming(now).orEmpty().take(LIST_TICK_ROWS)
             next = minOf(next, WidgetUpdater.nextTick(now, RefreshPolicy.nextRenderAt(now, board), shown, minutes))
         }
         return next
@@ -89,6 +93,132 @@ object StationWidgetUpdater {
         PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
     )
 
+    /** Header (stop name and status) and the tap action, shared by both layouts. */
+    private fun bindHeader(
+        context: Context,
+        views: RemoteViews,
+        widgetId: Int,
+        stop: Stop?,
+        board: Board?,
+        offline: Boolean,
+        refreshing: Boolean,
+    ) {
+        // Tap: refresh now. Long-press → settings (Android's widget menu) changes the stop.
+        // Without a stop, a tap opens the stop search for this widget instead.
+        views.setOnClickPendingIntent(
+            android.R.id.background,
+            if (stop == null) {
+                choosePickerIntent(context, widgetId)
+            } else {
+                WidgetUpdater.broadcast(context, DeparturesWidget.ACTION_REFRESH, 100 + widgetId, widgetId)
+            },
+        )
+        views.setTextViewText(R.id.title, stop?.name ?: context.getString(R.string.station_widget_name))
+        val fetched = board?.fetchedAtEpochMs
+        views.setTextViewText(
+            R.id.subtitle,
+            when {
+                stop == null -> ""
+                refreshing -> context.getString(R.string.updating_short)
+                offline -> context.getString(R.string.offline_short)
+                fetched != null -> context.getString(R.string.updated_at, Format.clock(fetched))
+                else -> ""
+            },
+        )
+    }
+
+    /** Fills one departure row; [ids] are row, line, dest, time, delay, count, min, line_bg, platform. */
+    private fun bindStationRow(
+        context: Context,
+        views: RemoteViews,
+        ids: IntArray,
+        d: Departure?,
+        now: Long,
+        minutes: Boolean,
+        stopName: String,
+        showPlatform: Boolean,
+    ) {
+        WidgetUpdater.bindRow(context, views, d, now, ids[0], ids[3], ids[4], ids[5], ids[6], minutes, stopName)
+        if (d == null) return
+        views.setTextViewText(ids[1], d.line)
+        WidgetUpdater.tintBadge(context, views, ids[7], ids[1], LineColors.of(d.operator, d.line))
+        views.setTextViewText(ids[2], Format.destination(d.destination, stopName))
+        val platform = d.platform?.trim().orEmpty()
+        views.setTextViewText(ids[8], platform)
+        views.setContentDescription(ids[8], context.getString(R.string.platform, platform))
+        views.setViewVisibility(
+            ids[8],
+            when {
+                !showPlatform -> View.GONE
+                platform.isEmpty() -> View.INVISIBLE // keep the column aligned
+                else -> View.VISIBLE
+            },
+        )
+    }
+
+    private val LIST_ROW_IDS = intArrayOf(
+        R.id.row, R.id.row_line, R.id.row_dest, R.id.row_time, R.id.row_delay,
+        R.id.row_count, R.id.row_min, R.id.row_line_bg, R.id.row_platform,
+    )
+
+    /** One departure as a list item of the scrollable board. */
+    internal fun listRow(context: Context, d: Departure, stopName: String, now: Long, minutes: Boolean, showPlatform: Boolean): RemoteViews {
+        val views = RemoteViews(context.packageName, R.layout.station_row)
+        bindStationRow(context, views, LIST_ROW_IDS, d, now, minutes, stopName, showPlatform)
+        // A tap on a row refreshes too (fills in the list's click template).
+        views.setOnClickFillInIntent(R.id.row, Intent())
+        return views
+    }
+
+    /** Android 12+: the whole board as a scrollable list. */
+    @androidx.annotation.RequiresApi(Build.VERSION_CODES.S)
+    internal fun buildList(
+        context: Context,
+        widgetId: Int,
+        stop: Stop?,
+        board: Board?,
+        offline: Boolean,
+        refreshing: Boolean,
+        now: Long,
+        minutes: Boolean,
+    ): RemoteViews {
+        val views = RemoteViews(context.packageName, R.layout.widget_station_list)
+        bindHeader(context, views, widgetId, stop, board, offline, refreshing)
+        val upcoming = if (stop == null) emptyList() else board?.upcoming(now).orEmpty().take(LIST_MAX_ROWS)
+        val showPlatform = upcoming.any { !it.platform.isNullOrBlank() }
+        val items = RemoteViews.RemoteCollectionItems.Builder().setHasStableIds(true).setViewTypeCount(1)
+        if (stop != null) {
+            for (d in upcoming) items.addItem(stableId(d), listRow(context, d, stop.name, now, minutes, showPlatform))
+        }
+        views.setRemoteAdapter(R.id.list, items.build())
+        views.setPendingIntentTemplate(
+            R.id.list,
+            PendingIntent.getBroadcast(
+                context,
+                200 + widgetId,
+                Intent(context, DeparturesWidget::class.java)
+                    .setAction(DeparturesWidget.ACTION_REFRESH)
+                    .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId),
+                // Mutable: list items fill in this template (required for collection clicks).
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+            ),
+        )
+        val empty = if (stop == null) {
+            context.getString(R.string.station_setup_needed)
+        } else {
+            Texts.empty(context, upcoming.isNotEmpty(), board != null, offline)
+        }
+        views.setViewVisibility(R.id.list, if (empty == null) View.VISIBLE else View.GONE)
+        views.setViewVisibility(R.id.empty, if (empty == null) View.GONE else View.VISIBLE)
+        views.setTextViewText(R.id.empty, empty)
+        return views
+    }
+
+    /** Same departure → same id across redraws, so the list keeps its scroll position. */
+    private fun stableId(d: Departure): Long =
+        (d.scheduledEpochMs / 60_000) * 1_000_003L + (d.line + "|" + d.destination).hashCode()
+
+    /** Android 8–11: fixed rows, as many as the widget's height allows. */
     internal fun build(
         context: Context,
         widgetId: Int,
@@ -101,54 +231,18 @@ object StationWidgetUpdater {
         minutes: Boolean,
     ): RemoteViews {
         val views = RemoteViews(context.packageName, R.layout.widget_station)
-        // Tap: refresh now. Long-press → settings (Android's widget menu) changes the stop.
-        views.setOnClickPendingIntent(
-            android.R.id.background,
-            WidgetUpdater.broadcast(context, DeparturesWidget.ACTION_REFRESH, 100 + widgetId, widgetId),
-        )
+        bindHeader(context, views, widgetId, stop, board, offline, refreshing)
         if (stop == null) {
-            // No stop yet (or it was lost): a tap opens the stop search for this widget.
-            views.setOnClickPendingIntent(android.R.id.background, choosePickerIntent(context, widgetId))
-            views.setTextViewText(R.id.title, context.getString(R.string.station_widget_name))
-            views.setTextViewText(R.id.subtitle, "")
             ROWS.forEach { views.setViewVisibility(it[0], View.GONE) }
             views.setViewVisibility(R.id.empty, View.VISIBLE)
             views.setTextViewText(R.id.empty, context.getString(R.string.station_setup_needed))
             return views
         }
-        views.setTextViewText(R.id.title, stop.name)
-        val fetched = board?.fetchedAtEpochMs
-        views.setTextViewText(
-            R.id.subtitle,
-            when {
-                refreshing -> context.getString(R.string.updating_short)
-                offline -> context.getString(R.string.offline_short)
-                fetched != null -> context.getString(R.string.updated_at, Format.clock(fetched))
-                else -> ""
-            },
-        )
         val upcoming = board?.upcoming(now).orEmpty()
         // The platform column appears only when a shown departure has a platform.
         val showPlatform = upcoming.take(rows).any { !it.platform.isNullOrBlank() }
         ROWS.forEachIndexed { i, ids ->
-            val d = upcoming.getOrNull(i)?.takeIf { i < rows }
-            WidgetUpdater.bindRow(context, views, d, now, ids[0], ids[3], ids[4], ids[5], ids[6], minutes, stop.name)
-            if (d != null) {
-                views.setTextViewText(ids[1], d.line)
-                WidgetUpdater.tintBadge(context, views, ids[7], ids[1], LineColors.of(d.operator, d.line))
-                views.setTextViewText(ids[2], Format.destination(d.destination, stop.name))
-                val platform = d.platform?.trim().orEmpty()
-                views.setTextViewText(ids[8], platform)
-                views.setContentDescription(ids[8], context.getString(R.string.platform, platform))
-                views.setViewVisibility(
-                    ids[8],
-                    when {
-                        !showPlatform -> View.GONE
-                        platform.isEmpty() -> View.INVISIBLE // keep the column aligned
-                        else -> View.VISIBLE
-                    },
-                )
-            }
+            bindStationRow(context, views, ids, upcoming.getOrNull(i)?.takeIf { i < rows }, now, minutes, stop.name, showPlatform)
         }
         val empty = Texts.empty(context, upcoming.isNotEmpty(), board != null, offline)
         views.setViewVisibility(R.id.empty, if (empty == null) View.GONE else View.VISIBLE)
