@@ -29,6 +29,16 @@ class RefreshPolicyTest {
     }
 
     @Test
+    fun `commute predictions expire after two minutes and station boards after five`() {
+        val commute = board(10, 20, 30)
+        val station = commute.copy(direction = null)
+        assertFalse(RefreshPolicy.shouldFetch(now + 2 * min - 1, commute, Direction.TO_WORK, "S1"))
+        assertTrue(RefreshPolicy.shouldFetch(now + 2 * min, commute, Direction.TO_WORK, "S1"))
+        assertFalse(RefreshPolicy.shouldFetch(now + 5 * min - 1, station, null, "S1"))
+        assertTrue(RefreshPolicy.shouldFetch(now + 5 * min, station, null, "S1"))
+    }
+
+    @Test
     fun `fetches when the clock went backwards`() {
         val future = Board(Direction.TO_WORK, listOf(dep(2), dep(9), dep(16)), now + 10 * min, "S1")
         assertTrue(RefreshPolicy.shouldFetch(now, future, Direction.TO_WORK, "S1"))
