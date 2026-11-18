@@ -151,8 +151,9 @@ The design goal is that the app costs nothing while you aren't looking at it.
   limits it to alarm-clock apps). Android 12 needs the user-granted *Alarms & reminders*.
 - **Without that permission** the widgets fall back to a seconds countdown drawn by the
   launcher itself, so the time shown is still never stale.
-- **The network is only used when needed.** Data is refetched when it is older than 5 minutes,
-  for another stop or direction, or running low on departures (only if the last fetch returned
+- **The network is only used when needed.** Commute predictions are refreshed on the next check after two
+  minutes and station boards after five. A refresh also happens for a different stop or direction,
+  or when running low on departures (only if the last fetch returned
   more, so a quiet route isn't refetched on every redraw). Automatic fetches never happen
   while the screen is off, and they back off for a minute after a failure.
 - A 30-minute WorkManager job is a safety net. It follows the same rules.

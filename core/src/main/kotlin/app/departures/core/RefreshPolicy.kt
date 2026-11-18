@@ -7,7 +7,8 @@ package app.departures.core
  */
 object RefreshPolicy {
     /** Live delays move; older data is refreshed on the next opportunity. */
-    const val STALE_AFTER_MS = 5 * 60_000L
+    private const val COMMUTE_STALE_AFTER_MS = 2 * 60_000L
+    private const val STATION_STALE_AFTER_MS = 5 * 60_000L
 
     /** Keep at least this many upcoming departures cached (the widget shows two). */
     const val MIN_UPCOMING = 3
@@ -28,7 +29,8 @@ object RefreshPolicy {
         minUpcoming: Int = MIN_UPCOMING,
     ): Boolean {
         if (board == null || board.direction != wanted || board.fromStopId != fromStopId) return true
-        if (nowEpochMs - board.fetchedAtEpochMs >= STALE_AFTER_MS) return true
+        val maxAge = if (wanted == null) STATION_STALE_AFTER_MS else COMMUTE_STALE_AFTER_MS
+        if (nowEpochMs - board.fetchedAtEpochMs >= maxAge) return true
         if (nowEpochMs < board.fetchedAtEpochMs) return true // clock moved backwards
         // Refetch when departures run out, but only if the last fetch returned more than are
         // left now. A board with only one or two matches at all (a quiet route, or a busy stop
